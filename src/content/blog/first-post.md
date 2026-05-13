@@ -1,16 +1,84 @@
 ---
-title: 'First post'
-description: 'Lorem ipsum dolor sit amet'
-pubDate: 'Jul 08 2022'
-heroImage: '../../assets/blog-placeholder-3.jpg'
+title: "Vercel Security Breach — What Happened and What You Should Do"
+pubDate: 2026-04-20
+author: "Your Name"
+heroImage: '../../assets/vercel-breach.png'
+description: "Vercel confirmed a breach involving customer data through a third-party AI tool. Here is the breakdown and recovery steps."
+category: "Artificial Intelligence"
+tags: ["vercel", "data-breach" , "AI","Tech"]
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc vel risus commodo viverra. Adipiscing enim eu turpis egestas pretium. Euismod elementum nisi quis eleifend quam adipiscing. In hac habitasse platea dictumst vestibulum. Sagittis purus sit amet volutpat. Netus et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus vestibulum lorem. Varius sit amet mattis vulputate enim. Habitasse platea dictumst quisque sagittis. Integer quis auctor elit sed vulputate mi. Dictumst quisque sagittis purus sit amet.
+Cloud hosting giant Vercel confirmed this weekend that hackers breached its internal systems and accessed customer data — through a compromised third-party AI tool. Here's everything you need to know and the steps you should take right now.
 
-Morbi tristique senectus et netus. Id semper risus in hendrerit gravida rutrum quisque non tellus. Habitasse platea dictumst quisque sagittis purus sit amet. Tellus molestie nunc non blandit massa. Cursus vitae congue mauris rhoncus. Accumsan tortor posuere ac ut. Fringilla urna porttitor rhoncus dolor. Elit ullamcorper dignissim cras tincidunt lobortis. In cursus turpis massa tincidunt dui ut ornare lectus. Integer feugiat scelerisque varius morbi enim nunc. Bibendum neque egestas congue quisque egestas diam. Cras ornare arcu dui vivamus arcu felis bibendum. Dignissim suspendisse in est ante in nibh mauris. Sed tempus urna et pharetra pharetra massa massa ultricies mi.
+## What Happened
 
-Mollis nunc sed id semper risus in. Convallis a cras semper auctor neque. Diam sit amet nisl suscipit. Lacus viverra vitae congue eu consequat ac felis donec. Egestas integer eget aliquet nibh praesent tristique magna sit amet. Eget magna fermentum iaculis eu non diam. In vitae turpis massa sed elementum. Tristique et egestas quis ipsum suspendisse ultrices. Eget lorem dolor sed viverra ipsum. Vel turpis nunc eget lorem dolor sed viverra. Posuere ac ut consequat semper viverra nam. Laoreet suspendisse interdum consectetur libero id faucibus. Diam phasellus vestibulum lorem sed risus ultricies tristique. Rhoncus dolor purus non enim praesent elementum facilisis. Ultrices tincidunt arcu non sodales neque. Tempus egestas sed sed risus pretium quam vulputate. Viverra suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Fringilla urna porttitor rhoncus dolor purus non. Amet dictum sit amet justo donec enim.
+### The Attack
+- A Vercel employee installed **Context AI's Office Suite** app and connected it to their corporate Google Workspace account via OAuth.
+- A Context AI employee had been infected with **Lumma infostealer malware** in February 2026 (traced back to downloading Roblox "auto-farm" scripts).
+- That infection exposed Context AI's credentials, including their Google OAuth tokens.
+- Hackers used the OAuth connection to **take over the Vercel employee's Google Workspace account**.
+- From there, they pivoted into Vercel's internal environments and accessed **unencrypted environment variables**.
 
-Mattis ullamcorper velit sed ullamcorper morbi tincidunt. Tortor posuere ac ut consequat semper viverra. Tellus mauris a diam maecenas sed enim ut sem viverra. Venenatis urna cursus eget nunc scelerisque viverra mauris in. Arcu ac tortor dignissim convallis aenean et tortor at. Curabitur gravida arcu ac tortor dignissim convallis aenean et tortor. Egestas tellus rutrum tellus pellentesque eu. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Ut enim blandit volutpat maecenas volutpat blandit aliquam etiam. Id donec ultrices tincidunt arcu. Id cursus metus aliquam eleifend mi.
+### What Was Stolen
+- Customer API keys and environment variables (non-sensitive ones).
+- Internal deployment credentials.
+- **580 Vercel employee records** — names, email addresses, account status, and activity timestamps.
+- Possibly source code and database data (claimed by the threat actor, unverified).
 
-Tempus quam pellentesque nec nam aliquam sem. Risus at ultrices mi tempus imperdiet. Id porta nibh venenatis cras sed felis eget velit. Ipsum a arcu cursus vitae. Facilisis magna etiam tempor orci eu lobortis elementum. Tincidunt dui ut ornare lectus sit. Quisque non tellus orci ac. Blandit libero volutpat sed cras. Nec tincidunt praesent semper feugiat nibh sed pulvinar proin gravida. Egestas integer eget aliquet nibh praesent tristique magna.
+### Who's Selling the Data
+A threat actor claiming to be **ShinyHunters** posted on BreachForums advertising the stolen data for **$2 million**, including API keys, source code, and access to internal deployments. The actual ShinyHunters group has denied involvement.
+
+---
+
+## What Is NOT Affected
+
+| Feature | Status |
+| :--- | :--- |
+| Next.js | ✅ Not affected |
+| Turbopack | ✅ Not affected |
+| Sensitive environment variables | ✅ Encrypted at rest, no evidence of access |
+| On-chain crypto protocols (e.g. Orca) | ✅ Not affected |
+
+---
+
+## Timeline
+
+| Date | Event |
+| :--- | :--- |
+| February 2026 | Context AI employee infected with Lumma infostealer |
+| March 2026 | Context AI identifies and blocks unauthorized access to its AWS environment |
+| April 17–19, 2026 | Hackers pivot into Vercel's internal systems via OAuth |
+| April 19, 2026 | Vercel publicly discloses the breach |
+| April 20, 2026 | Hudson Rock links breach to the February infostealer infection |
+
+---
+
+## Instructions for Vercel Users
+
+### 1. Rotate your credentials
+Immediately rotate all API keys, tokens, and secrets stored as environment variables in your Vercel projects — treat every non-sensitive variable as potentially compromised.
+
+### 2. Audit your access logs
+Review your Vercel project logs and Google Workspace audit logs for the window of **April 17–19, 2026** for any suspicious access or changes.
+
+### 3. Check your Google Workspace for the malicious OAuth app
+Go to **Google Admin Console → Security → API Controls → Manage Third-Party App Access** and search for this OAuth Client ID:
+`110671459871-30f1spbu0hptbs60cb4vsmv79i7bbvqj.apps.googleusercontent.com`
+
+If it appears, revoke access immediately.
+
+### 4. Mark sensitive variables as "Sensitive"
+In your Vercel dashboard, go to your project's Environment Variables settings and enable the **Sensitive** flag on any variable containing secrets. Sensitive variables are encrypted at rest and cannot be read back.
+
+---
+
+## Incident Summary
+
+| Metric | Detail |
+| :--- | :--- |
+| Disclosed | April 19, 2026 |
+| Attack vector | OAuth supply chain via Context AI |
+| Root cause | Lumma infostealer on a Context AI employee's machine |
+| Data exposed | Employee records, API keys, env variables |
+| Asking price | $2 million |
+| Next.js Affected | No |

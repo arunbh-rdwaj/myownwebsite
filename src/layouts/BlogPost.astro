@@ -8,79 +8,331 @@ import Header from '../components/Header.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.props;
 ---
 
 <html lang="en">
 	<head>
 		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
 	</head>
 
 	<body>
 		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+
+		<div class="post-layout">
+			<article class="post-article">
+				<div class="back-link">
+					<a href="/blog">← Back to all posts</a>
 				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
-						<hr />
+
+				{tags && tags.length > 0 && (
+					<div class="post-tags">
+						{tags.map((tag: string) => (
+							<span class="tag-pill">{tag}</span>
+						))}
 					</div>
+				)}
+
+				<h1 class="post-title">{title}</h1>
+				<p class="post-desc">{description}</p>
+
+				<div class="post-meta">
+					<div class="author-info">
+						<div class="author-avatar">AB</div>
+						<div>
+							<div class="author-name">Arun Bhardwaj</div>
+							<div class="post-date">
+								<FormattedDate date={pubDate} />
+								{updatedDate && <span> · Updated <FormattedDate date={updatedDate} /></span>}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				{heroImage && (
+					<div class="hero-image">
+						<Image width={1536} height={1024} src={heroImage} alt={title} />
+					</div>
+				)}
+
+				<div class="prose" id="prose-content">
 					<slot />
 				</div>
 			</article>
-		</main>
+
+			<aside class="toc-sidebar" id="toc-sidebar">
+				<div class="toc-inner">
+					<p class="toc-label">ON THIS PAGE</p>
+					<nav id="toc-nav" aria-label="Table of contents"></nav>
+				</div>
+			</aside>
+		</div>
+
 		<Footer />
 	</body>
 </html>
+
+<script>
+	const prose = document.getElementById('prose-content');
+	const tocNav = document.getElementById('toc-nav');
+
+	if (prose && tocNav) {
+		const headings = prose.querySelectorAll('h2, h3');
+
+		if (headings.length > 0) {
+			const ul = document.createElement('ul');
+
+			headings.forEach((heading, i) => {
+				if (!heading.id) heading.id = `heading-${i}`;
+				const li = document.createElement('li');
+				li.className = heading.tagName === 'H3' ? 'toc-h3' : 'toc-h2';
+				const a = document.createElement('a');
+				a.href = `#${heading.id}`;
+				a.textContent = heading.textContent ?? '';
+				li.appendChild(a);
+				ul.appendChild(li);
+			});
+
+			tocNav.appendChild(ul);
+
+			const observer = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						const link = tocNav.querySelector(`a[href="#${entry.target.id}"]`);
+						if (link && entry.isIntersecting) {
+							tocNav.querySelectorAll('a').forEach((a) => a.classList.remove('active'));
+							link.classList.add('active');
+						}
+					});
+				},
+				{ rootMargin: '-10% 0px -80% 0px' }
+			);
+
+			headings.forEach((h) => observer.observe(h));
+		} else {
+			const sidebar = document.getElementById('toc-sidebar');
+			if (sidebar) sidebar.style.display = 'none';
+		}
+	}
+</script>
+
+<style>
+	.post-layout {
+		display: grid;
+		grid-template-columns: 1fr 240px;
+		gap: 3rem;
+		max-width: 1100px;
+		margin: 0 auto;
+		padding: 3em 2em 5em;
+		align-items: start;
+	}
+
+	.post-article { min-width: 0; }
+
+	.back-link { margin-bottom: 1.5rem; }
+
+	.back-link a {
+		font-size: 0.85em;
+		color: var(--text-muted);
+		text-decoration: none;
+		transition: color 0.15s;
+	}
+
+	.back-link a:hover { color: var(--accent); }
+
+	.post-tags {
+		display: flex;
+		gap: 0.4rem;
+		flex-wrap: wrap;
+		margin-bottom: 1rem;
+	}
+
+	.tag-pill {
+		font-size: 0.7em;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--accent);
+		background: var(--accent-dim);
+		border: 1px solid var(--accent-border);
+		padding: 0.2em 0.7em;
+		border-radius: 999px;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+	}
+
+	.post-title {
+		font-size: clamp(1.8rem, 4vw, 2.8rem);
+		line-height: 1.15;
+		margin-bottom: 0.75rem;
+		color: var(--text);
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+		letter-spacing: -0.03em;
+	}
+
+	.post-desc {
+		font-size: 1.05em;
+		color: var(--text-muted);
+		margin-bottom: 1.5rem;
+	}
+
+	.post-meta {
+		margin-bottom: 2rem;
+		padding-bottom: 1.5rem;
+		border-bottom: 1px solid var(--border);
+	}
+
+	.author-info {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
+	.author-avatar {
+		width: 38px;
+		height: 38px;
+		border-radius: 50%;
+		background: linear-gradient(135deg, #F97316, #FDBA74);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.75em;
+		font-weight: 700;
+		color: #fff;
+		flex-shrink: 0;
+	}
+
+	.author-name {
+		font-size: 0.9em;
+		font-weight: 600;
+		color: var(--text);
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+	}
+
+	.post-date {
+		font-size: 0.8em;
+		color: var(--text-dim);
+	}
+
+	.hero-image {
+		margin-bottom: 2.5rem;
+		border-radius: 12px;
+	}
+
+	.hero-image img {
+		width: 100%;
+		height: auto;
+		border-radius: 12px;
+		display: block;
+		object-fit: contain;
+	}
+
+	/* ── Prose ── */
+	.prose { color: var(--text-muted); line-height: 1.8; }
+
+	.prose :global(h2) {
+		font-size: 1.6em;
+		margin: 2em 0 0.75em;
+		color: var(--text);
+		scroll-margin-top: 80px;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+		letter-spacing: -0.02em;
+	}
+
+	.prose :global(h3) {
+		font-size: 1.25em;
+		margin: 1.5em 0 0.5em;
+		color: var(--text);
+		scroll-margin-top: 80px;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+	}
+
+	.prose :global(p) { margin-bottom: 1.5em; color: var(--text-muted); }
+
+	.prose :global(a) {
+		color: var(--accent);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	.prose :global(a:hover) { color: var(--accent-hover); }
+
+	.prose :global(ul), .prose :global(ol) {
+		padding-left: 1.5em;
+		margin-bottom: 1.5em;
+		color: var(--text-muted);
+	}
+
+	.prose :global(li) { margin-bottom: 0.4em; }
+
+	.prose :global(img) { border-radius: 10px; margin: 1.5em 0; }
+
+	.prose :global(blockquote) {
+		border-left: 3px solid var(--accent);
+		padding-left: 1.2em;
+		color: var(--text-muted);
+		font-style: italic;
+		margin: 1.5em 0;
+	}
+
+	/* ── TOC Sidebar ── */
+	.toc-sidebar {
+		position: sticky;
+		top: 80px;
+	}
+
+	.toc-inner {
+		background: var(--bg-card);
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		padding: 1.2rem;
+		transition: background 0.3s, border-color 0.3s;
+	}
+
+	.toc-label {
+		font-size: 0.7em;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--text-dim);
+		margin: 0 0 0.75rem;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+	}
+
+	#toc-nav :global(ul) {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.1rem;
+	}
+
+	#toc-nav :global(li) { margin: 0; }
+	#toc-nav :global(.toc-h3) { padding-left: 0.75rem; }
+
+	#toc-nav :global(a) {
+		display: block;
+		font-size: 0.8em;
+		color: var(--text-dim);
+		text-decoration: none;
+		padding: 0.25em 0.5em;
+		border-radius: 4px;
+		transition: all 0.15s;
+		line-height: 1.4;
+	}
+
+	#toc-nav :global(a:hover) {
+		color: var(--text);
+		background: var(--bg-card-hover);
+	}
+
+	#toc-nav :global(a.active) {
+		color: var(--accent);
+		background: var(--accent-dim);
+	}
+
+	@media (max-width: 900px) {
+		.post-layout { grid-template-columns: 1fr; padding: 2em 1em 4em; }
+		.toc-sidebar { display: none; }
+	}
+</style>

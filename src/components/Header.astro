@@ -1,85 +1,422 @@
 ---
-import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
 ---
 
 <header>
 	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
+		<a href="/" class="logo">Arun Bhardwaj</a>
+
 		<div class="internal-links">
 			<HeaderLink href="/">Home</HeaderLink>
 			<HeaderLink href="/blog">Blog</HeaderLink>
+			<HeaderLink href="/categories">Categories</HeaderLink>
+			<HeaderLink href="/portfolio">Portfolio</HeaderLink>
 			<HeaderLink href="/about">About</HeaderLink>
 		</div>
-		<div class="social-links">
-			<a href="https://m.webtoo.ls/@astro" target="_blank">
-				<span class="sr-only">Follow Astro on Mastodon</span>
-				<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32"
-					><path
-						fill="currentColor"
-						d="M11.19 12.195c2.016-.24 3.77-1.475 3.99-2.603.348-1.778.32-4.339.32-4.339 0-3.47-2.286-4.488-2.286-4.488C12.062.238 10.083.017 8.027 0h-.05C5.92.017 3.942.238 2.79.765c0 0-2.285 1.017-2.285 4.488l-.002.662c-.004.64-.007 1.35.011 2.091.083 3.394.626 6.74 3.78 7.57 1.454.383 2.703.463 3.709.408 1.823-.1 2.847-.647 2.847-.647l-.06-1.317s-1.303.41-2.767.36c-1.45-.05-2.98-.156-3.215-1.928a3.614 3.614 0 0 1-.033-.496s1.424.346 3.228.428c1.103.05 2.137-.064 3.188-.189zm1.613-2.47H11.13v-4.08c0-.859-.364-1.295-1.091-1.295-.804 0-1.207.517-1.207 1.541v2.233H7.168V5.89c0-1.024-.403-1.541-1.207-1.541-.727 0-1.091.436-1.091 1.296v4.079H3.197V5.522c0-.859.22-1.541.66-2.046.456-.505 1.052-.764 1.793-.764.856 0 1.504.328 1.933.983L8 4.39l.417-.695c.429-.655 1.077-.983 1.934-.983.74 0 1.336.259 1.791.764.442.505.661 1.187.661 2.046v4.203z"
-					></path></svg
-				>
-			</a>
-			<a href="https://twitter.com/astrodotbuild" target="_blank">
-				<span class="sr-only">Follow Astro on Twitter</span>
-				<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32"
-					><path
-						fill="currentColor"
-						d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"
-					></path></svg
-				>
-			</a>
-			<a href="https://github.com/withastro/astro" target="_blank">
-				<span class="sr-only">Go to Astro's GitHub repo</span>
-				<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32"
-					><path
-						fill="currentColor"
-						d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"
-					></path></svg
-				>
-			</a>
+
+		<div class="right-group">
+			<!-- Search -->
+			<div class="search-wrap">
+				<button class="search-trigger" id="search-trigger" aria-label="Search posts">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+				</button>
+				<div class="search-dropdown" id="search-dropdown" aria-hidden="true">
+					<div class="search-input-wrap">
+						<svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+						<input type="text" id="header-search" class="search-input" placeholder="Search posts…" autocomplete="off" aria-label="Search posts" />
+						<kbd class="search-esc">Esc</kbd>
+					</div>
+					<div class="search-results" id="search-results"></div>
+				</div>
+			</div>
+
+			<div class="social-links">
+				<a href="https://github.com/arunbh-rdwaj" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+					<svg viewBox="0 0 16 16" aria-hidden="true" width="18" height="18">
+						<path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+					</svg>
+				</a>
+				<a href="https://www.linkedin.com/in/arun-bhardwaj-730b9920b/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+					<svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
+						<path fill="currentColor" d="M4.98 3.5C4.98 4.88 3.86 6 2.48 6S0 4.88 0 3.5 1.12 1 2.48 1s2.5 1.12 2.5 2.5zM.5 8h4V24h-4V8zm7.5 0h3.8v2.2h.1c.5-.9 1.8-2.2 3.8-2.2 4 0 4.7 2.6 4.7 6V24h-4v-7.1c0-1.7 0-3.9-2.4-3.9s-2.8 1.8-2.8 3.8V24h-4V8z"/>
+					</svg>
+				</a>
+				<a href="https://www.youtube.com/@CookWithArun1" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+					<svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
+						<path fill="currentColor" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8zM9.75 15.5v-7L16 12l-6.25 3.5z"/>
+					</svg>
+				</a>
+			</div>
+
+			<!-- Theme toggle -->
+			<button id="theme-toggle" aria-label="Toggle light/dark mode" title="Toggle theme">
+				<!-- Sun icon (shown in dark mode, click to go light) -->
+				<svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+					<circle cx="12" cy="12" r="5"/>
+					<line x1="12" y1="1" x2="12" y2="3"/>
+					<line x1="12" y1="21" x2="12" y2="23"/>
+					<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+					<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+					<line x1="1" y1="12" x2="3" y2="12"/>
+					<line x1="21" y1="12" x2="23" y2="12"/>
+					<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+					<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+				</svg>
+				<!-- Moon icon (shown in light mode, click to go dark) -->
+				<svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+					<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+				</svg>
+			</button>
 		</div>
 	</nav>
 </header>
-<style>
-	header {
-		margin: 0;
-		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+
+<script>
+	// ── Theme (default: light) ──
+	const root = document.documentElement;
+	const btn = document.getElementById('theme-toggle');
+	const saved = localStorage.getItem('theme') ?? 'light';
+	root.setAttribute('data-theme', saved);
+
+	function updateIcons(theme: string) {
+		const sun = btn?.querySelector('.icon-sun') as HTMLElement | null;
+		const moon = btn?.querySelector('.icon-moon') as HTMLElement | null;
+		if (theme === 'dark') {
+			if (sun) sun.style.display = 'block';
+			if (moon) moon.style.display = 'none';
+		} else {
+			if (sun) sun.style.display = 'none';
+			if (moon) moon.style.display = 'block';
+		}
 	}
-	h2 {
-		margin: 0;
-		font-size: 1em;
+	updateIcons(saved);
+
+	btn?.addEventListener('click', () => {
+		const current = root.getAttribute('data-theme') ?? 'light';
+		const next = current === 'dark' ? 'light' : 'dark';
+		root.setAttribute('data-theme', next);
+		localStorage.setItem('theme', next);
+		updateIcons(next);
+	});
+
+	// ── Search ──
+	const trigger = document.getElementById('search-trigger') as HTMLButtonElement;
+	const dropdown = document.getElementById('search-dropdown') as HTMLElement;
+	const input = document.getElementById('header-search') as HTMLInputElement;
+	const resultsBox = document.getElementById('search-results') as HTMLElement;
+
+	let posts: { id: string; title: string; description: string; category: string; tags: string[] }[] = [];
+
+	async function loadPosts() {
+		if (posts.length) return;
+		try {
+			const res = await fetch('/search-index.json');
+			posts = await res.json();
+		} catch {}
 	}
 
-	h2 a,
-	h2 a.active {
-		text-decoration: none;
+	function openSearch() {
+		dropdown.setAttribute('aria-hidden', 'false');
+		dropdown.classList.add('open');
+		input.focus();
 	}
+
+	function closeSearch() {
+		dropdown.setAttribute('aria-hidden', 'true');
+		dropdown.classList.remove('open');
+		input.value = '';
+		resultsBox.innerHTML = '';
+	}
+
+	trigger.addEventListener('click', async () => {
+		await loadPosts();
+		openSearch();
+	});
+
+	document.addEventListener('keydown', async (e) => {
+		if ((e.key === '/' || (e.ctrlKey && e.key === 'k')) && !['INPUT','TEXTAREA'].includes((e.target as HTMLElement).tagName)) {
+			e.preventDefault();
+			await loadPosts();
+			openSearch();
+		}
+		if (e.key === 'Escape') closeSearch();
+	});
+
+	document.addEventListener('click', (e) => {
+		if (!dropdown.contains(e.target as Node) && e.target !== trigger) closeSearch();
+	});
+
+	input.addEventListener('input', () => {
+		const q = input.value.toLowerCase().trim();
+		if (!q) { resultsBox.innerHTML = ''; return; }
+
+		const matches = posts.filter(p =>
+			p.title.toLowerCase().includes(q) ||
+			p.description.toLowerCase().includes(q) ||
+			p.category.toLowerCase().includes(q) ||
+			p.tags.join(' ').toLowerCase().includes(q)
+		).slice(0, 6);
+
+		if (!matches.length) {
+			resultsBox.innerHTML = '<p class="no-results">No posts found.</p>';
+			return;
+		}
+
+		resultsBox.innerHTML = matches.map(p => `
+			<a href="/blog/${p.id}/" class="result-item">
+				<span class="result-title">${p.title}</span>
+				${p.category ? `<span class="result-cat">${p.category}</span>` : ''}
+				<span class="result-desc">${p.description}</span>
+			</a>
+		`).join('');
+	});
+</script>
+
+<style>
+	header {
+		position: sticky;
+		top: 0;
+		z-index: 100;
+		padding: 0 2em;
+		background: color-mix(in srgb, var(--bg) 92%, transparent);
+		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(16px);
+		border-bottom: 1px solid var(--border);
+		transition: background 0.3s, border-color 0.3s;
+	}
+
 	nav {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		gap: 1rem;
+		max-width: 1100px;
+		margin: 0 auto;
+		height: 62px;
 	}
-	nav a {
-		padding: 1em 0.5em;
-		color: var(--black);
-		border-bottom: 4px solid transparent;
+
+	.logo {
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+		font-size: 1.05em;
+		font-weight: 700;
+		color: var(--text);
 		text-decoration: none;
+		letter-spacing: -0.03em;
+		white-space: nowrap;
+		transition: color 0.15s;
 	}
-	nav a.active {
+
+	.logo:hover { color: var(--accent); }
+
+	.internal-links {
+		display: flex;
+		align-items: center;
+		gap: 0.1rem;
+	}
+
+	.internal-links :global(a) {
+		font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+		padding: 0.4em 0.85em;
+		color: var(--text-muted);
+		border-radius: 6px;
 		text-decoration: none;
-		border-bottom-color: var(--accent);
+		font-size: 0.88em;
+		font-weight: 500;
+		transition: color 0.15s, background 0.15s;
 	}
-	.social-links,
+
+	.internal-links :global(a:hover) {
+		color: var(--text);
+		background: var(--bg-card);
+	}
+
+	.internal-links :global(a.active) {
+		color: var(--accent);
+		font-weight: 600;
+	}
+
+	.right-group {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	/* ── Search ── */
+	.search-wrap { position: relative; }
+
+	.search-trigger {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 34px;
+		height: 34px;
+		border-radius: 7px;
+		border: 1px solid var(--border);
+		background: var(--bg-card);
+		color: var(--text-muted);
+		cursor: pointer;
+		transition: color 0.15s, background 0.15s, border-color 0.15s;
+		padding: 0;
+	}
+
+	.search-trigger:hover {
+		color: var(--accent);
+		border-color: var(--accent-border);
+		background: var(--accent-dim);
+	}
+
+	.search-dropdown {
+		display: none;
+		position: absolute;
+		top: calc(100% + 10px);
+		right: 0;
+		width: 360px;
+		background: var(--bg-card);
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		box-shadow: var(--shadow-md);
+		overflow: hidden;
+		z-index: 200;
+	}
+
+	.search-dropdown.open { display: block; }
+
+	.search-input-wrap {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.75rem 1rem;
+		border-bottom: 1px solid var(--border);
+	}
+
+	.search-icon { color: var(--text-dim); flex-shrink: 0; }
+
+	.search-input {
+		flex: 1;
+		border: none;
+		background: transparent;
+		color: var(--text);
+		font-size: 0.9em;
+		font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+		outline: none;
+	}
+
+	.search-input::placeholder { color: var(--text-dim); }
+
+	.search-esc {
+		font-size: 0.7em;
+		color: var(--text-dim);
+		background: var(--bg);
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		padding: 0.1em 0.4em;
+		font-family: var(--font-mono, monospace);
+		flex-shrink: 0;
+	}
+
+	.search-results { max-height: 320px; overflow-y: auto; }
+
+	.search-results :global(.result-item) {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+		padding: 0.75rem 1rem;
+		text-decoration: none;
+		color: inherit;
+		border-bottom: 1px solid var(--border);
+		transition: background 0.15s;
+	}
+
+	.search-results :global(.result-item:last-child) { border-bottom: none; }
+	.search-results :global(.result-item:hover) { background: var(--accent-dim); }
+
+	.search-results :global(.result-title) {
+		font-size: 0.9em;
+		font-weight: 600;
+		color: var(--text);
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+	}
+
+	.search-results :global(.result-cat) {
+		font-size: 0.68em;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--accent);
+	}
+
+	.search-results :global(.result-desc) {
+		font-size: 0.78em;
+		color: var(--text-muted);
+		display: -webkit-box;
+		-webkit-line-clamp: 1;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.search-results :global(.no-results) {
+		padding: 1.5rem 1rem;
+		text-align: center;
+		color: var(--text-dim);
+		font-size: 0.85em;
+	}
+
+	/* ── Social ── */
+	.social-links {
+		display: flex;
+		align-items: center;
+		gap: 0.1rem;
+	}
+
 	.social-links a {
 		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 34px;
+		height: 34px;
+		border-radius: 7px;
+		color: var(--text-dim);
+		text-decoration: none;
+		transition: color 0.15s, background 0.15s;
 	}
+
+	.social-links a:hover {
+		color: var(--text);
+		background: var(--bg-card);
+	}
+
+	/* ── Theme toggle ── */
+	#theme-toggle {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 34px;
+		height: 34px;
+		border-radius: 7px;
+		border: 1px solid var(--border);
+		background: var(--bg-card);
+		color: var(--text-muted);
+		cursor: pointer;
+		transition: color 0.15s, background 0.15s, border-color 0.15s;
+		padding: 0;
+		margin-left: 0.25rem;
+	}
+
+	#theme-toggle:hover {
+		color: var(--accent);
+		border-color: var(--accent-border);
+		background: var(--accent-dim);
+	}
+
+	/* Default: light mode shows moon icon */
+	.icon-sun  { display: none; }
+	.icon-moon { display: block; }
+
 	@media (max-width: 720px) {
-		.social-links {
-			display: none;
-		}
+		header { padding: 0 1em; }
+		nav { height: auto; padding: 0.6em 0; flex-wrap: wrap; gap: 0.4rem; }
+		.internal-links :global(a) { padding: 0.3em 0.55em; font-size: 0.82em; }
+		.social-links { display: none; }
+		.search-dropdown { width: calc(100vw - 2rem); right: -1rem; }
 	}
 </style>

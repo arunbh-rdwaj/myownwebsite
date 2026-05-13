@@ -1,8 +1,37 @@
 ---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+import carouselImg1 from '../assets/hero_about.jpg';
+import carouselImg2 from '../assets/Travel.jpeg';
+import carouselImg5 from '../assets/Travel2.jpeg';
+import carouselImg6 from '../assets/travel3.jpeg';
+import carouselImg7 from '../assets/travel5.jpg';
+import carouselImg3 from '../assets/hero_about.jpg';
+import carouselImg4 from '../assets/20250806_203904.jpg';
+
+const carouselImages = [
+	{ src: carouselImg1, alt: 'Photo 1' },
+	{ src: carouselImg2, alt: 'Photo 2' },
+	{ src: carouselImg5, alt: 'Photo 3' },
+	{ src: carouselImg6, alt: 'Photo 4' },
+	{ src: carouselImg7, alt: 'Photo 5' },
+];
+
+const allPosts = (await getCollection('blog'))
+	.sort((a, b) => {
+		const aDate = a.data.addedDate ?? a.data.pubDate;
+		const bDate = b.data.addedDate ?? b.data.pubDate;
+		return bDate.valueOf() - aDate.valueOf();
+	});
+
+const posts = allPosts.slice(0, 3);
+const latestPost = allPosts[0];
 ---
 
 <!doctype html>
@@ -12,38 +41,449 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 	</head>
 	<body>
 		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
+
+		<section class="hero">
+			<div class="hero-content">
+				<div class="hero-text">
+					<span class="hero-badge">Software Engineer</span>
+					<h1>
+						Exploring AI<br />
+						<span class="gradient-text">Beyond the Hype.</span>
+					</h1>
+					<p class="hero-desc">
+						Thoughts on AI, technology, digital creativity, tools, and the future we're building into.
+					</p>
+					<div class="hero-actions">
+						<a href={`/blog/${latestPost.id}/`} class="btn btn-primary">Read Latest Blog</a>
+						<a href="/portfolio" class="btn btn-outline">View Portfolio</a>
+					</div>
+				</div>
+				<div class="hero-visual">
+					<div class="carousel" id="hero-carousel">
+						<div class="carousel-track" id="carousel-track">
+							{carouselImages.map((img, i) => (
+								<div class="carousel-slide" data-index={i}>
+									<Image src={img.src} alt={img.alt} width={520} height={420} class="hero-img" />
+								</div>
+							))}
+						</div>
+						<button class="carousel-btn carousel-prev" id="carousel-prev" aria-label="Previous photo">&#8592;</button>
+						<button class="carousel-btn carousel-next" id="carousel-next" aria-label="Next photo">&#8594;</button>
+						<div class="carousel-dots" id="carousel-dots">
+							{carouselImages.map((_, i) => (
+								<button class={`carousel-dot${i === 0 ? ' active' : ''}`} data-dot={i} aria-label={`Go to photo ${i + 1}`} />
+							))}
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="featured">
+			<div class="section-header">
+				<h2 class="section-title">Featured Posts</h2>
+				<a href="/blog" class="view-all">View all posts →</a>
+			</div>
+
+			<div class="posts-grid">
+				{posts.map((post) => (
+					<a href={`/blog/${post.id}/`} class="post-card">
+						{post.data.heroImage && (
+							<div class="post-card-image">
+								<Image src={post.data.heroImage} alt={post.data.title} width={400} height={220} />
+							</div>
+						)}
+						<div class="post-card-body">
+							{post.data.tags && post.data.tags[0] && (
+								<span class="tag-pill">{post.data.tags[0]}</span>
+							)}
+							<h3 class="post-card-title">{post.data.title}</h3>
+							<p class="post-card-desc">{post.data.description}</p>
+							<p class="post-card-date">
+								<FormattedDate date={post.data.pubDate} />
+							</p>
+						</div>
+					</a>
+				))}
+			</div>
+		</section>
+
 		<Footer />
 	</body>
 </html>
+
+<style>
+	/* ── Hero ── */
+	.hero {
+		padding: 5em 2em 4em;
+		max-width: 1100px;
+		margin: 0 auto;
+	}
+
+	.hero-content {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 4rem;
+		align-items: center;
+	}
+
+	.hero-badge {
+		display: inline-block;
+		padding: 0.3em 0.9em;
+		border-radius: 999px;
+		font-size: 0.72em;
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		background: var(--accent-dim);
+		color: var(--accent);
+		border: 1px solid var(--accent-border);
+		margin-bottom: 1rem;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+	}
+
+	.hero-text h1 {
+		font-size: clamp(2.2rem, 5vw, 3.5rem);
+		line-height: 1.1;
+		margin-bottom: 1rem;
+		color: var(--text);
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+		letter-spacing: -0.03em;
+	}
+
+	.gradient-text {
+		background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
+
+	.hero-desc {
+		font-size: 1.05em;
+		color: var(--text-muted);
+		margin-bottom: 2rem;
+		max-width: 480px;
+	}
+
+	.hero-actions {
+		display: flex;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.hero-visual { position: relative; }
+
+	/* ── Carousel ── */
+	.carousel {
+		position: relative;
+		border-radius: 16px;
+		overflow: hidden;
+		box-shadow: var(--shadow-md);
+		aspect-ratio: 520 / 420;
+	}
+
+	.carousel-track {
+		display: flex;
+		width: 100%;
+		height: 100%;
+		transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.carousel-slide {
+		min-width: 100%;
+		height: 100%;
+		flex-shrink: 0;
+	}
+
+	.hero-img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+		border-radius: 0;
+	}
+
+	.carousel-btn {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		background: rgba(0, 0, 0, 0.45);
+		color: #fff;
+		border: none;
+		border-radius: 50%;
+		width: 36px;
+		height: 36px;
+		font-size: 1rem;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: background 0.2s;
+		z-index: 2;
+		backdrop-filter: blur(4px);
+	}
+
+	.carousel-btn:hover { background: rgba(0, 0, 0, 0.7); }
+	.carousel-prev { left: 10px; }
+	.carousel-next { right: 10px; }
+
+	.carousel-dots {
+		position: absolute;
+		bottom: 10px;
+		left: 50%;
+		transform: translateX(-50%);
+		display: flex;
+		gap: 6px;
+		z-index: 2;
+	}
+
+	.carousel-dot {
+		width: 7px;
+		height: 7px;
+		border-radius: 50%;
+		border: none;
+		background: rgba(255, 255, 255, 0.45);
+		cursor: pointer;
+		padding: 0;
+		transition: background 0.2s, transform 0.2s;
+	}
+
+	.carousel-dot.active {
+		background: #fff;
+		transform: scale(1.3);
+	}
+
+	/* ── Buttons ── */
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5em;
+		padding: 0.65em 1.4em;
+		border-radius: 8px;
+		font-size: 0.9em;
+		font-weight: 600;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+		cursor: pointer;
+		transition: all 0.2s ease;
+		text-decoration: none;
+		border: none;
+	}
+
+	.btn-primary {
+		background: var(--accent);
+		color: #fff;
+	}
+
+	.btn-primary:hover {
+		background: var(--accent-hover);
+		color: #fff;
+		transform: translateY(-1px);
+		box-shadow: var(--shadow-accent);
+	}
+
+	.btn-outline {
+		background: transparent;
+		color: var(--text);
+		border: 1px solid var(--border);
+	}
+
+	.btn-outline:hover {
+		background: var(--bg-card);
+		border-color: var(--accent);
+		color: var(--accent);
+	}
+
+	/* ── Featured Posts ── */
+	.featured {
+		max-width: 1100px;
+		margin: 0 auto;
+		padding: 0 2em 5em;
+	}
+
+	.section-header {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		margin-bottom: 1.5rem;
+	}
+
+	.section-title {
+		font-size: 1.4em;
+		color: var(--text);
+		margin: 0;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+	}
+
+	.view-all {
+		font-size: 0.85em;
+		color: var(--accent);
+		text-decoration: none;
+		transition: color 0.15s;
+	}
+
+	.view-all:hover { color: var(--accent-hover); }
+
+	.posts-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1.5rem;
+	}
+
+	.post-card {
+		display: flex;
+		flex-direction: column;
+		text-decoration: none;
+		color: inherit;
+		border-radius: 12px;
+		overflow: hidden;
+		background: var(--bg-card);
+		border: 1px solid var(--border);
+		transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+	}
+
+	.post-card:hover {
+		border-color: var(--accent-border);
+		transform: translateY(-2px);
+		box-shadow: var(--shadow-md);
+	}
+
+	.post-card-image img {
+		width: 100%;
+		height: 180px;
+		object-fit: cover;
+		border-radius: 0;
+		display: block;
+	}
+
+	.post-card-body {
+		padding: 1.2rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+		flex: 1;
+	}
+
+	.tag-pill {
+		display: inline-block;
+		font-size: 0.68em;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--accent);
+		background: var(--accent-dim);
+		border: 1px solid var(--accent-border);
+		padding: 0.15em 0.6em;
+		border-radius: 999px;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+		width: fit-content;
+	}
+
+	.post-card-title {
+		font-size: 1em;
+		color: var(--text);
+		margin: 0;
+		line-height: 1.4;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+	}
+
+	.post-card-desc {
+		font-size: 0.82em;
+		color: var(--text-muted);
+		margin: 0;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.post-card-date {
+		font-size: 0.78em;
+		color: var(--text-dim);
+		margin: 0;
+	}
+
+	@media (max-width: 900px) {
+		.hero-content { grid-template-columns: 1fr; gap: 2rem; }
+		.hero-visual { display: none; }
+		.posts-grid { grid-template-columns: 1fr; }
+	}
+	@media (max-width: 600px) {
+		.hero { padding: 3em 1em 2em; }
+		.featured { padding: 0 1em 3em; }
+	}
+</style>
+
+<script>
+	const track = document.getElementById('carousel-track') as HTMLElement;
+	const dots = document.querySelectorAll<HTMLButtonElement>('.carousel-dot');
+	const total = dots.length;
+	let current = 0; // logical index (0-based, real slides only)
+	let isTransitioning = false;
+	let timer: ReturnType<typeof setInterval>;
+
+	// Clone first and last slides for infinite loop illusion
+	const slides = Array.from(track.children) as HTMLElement[];
+	const firstClone = slides[0].cloneNode(true) as HTMLElement;
+	const lastClone = slides[slides.length - 1].cloneNode(true) as HTMLElement;
+	firstClone.setAttribute('data-clone', 'true');
+	lastClone.setAttribute('data-clone', 'true');
+	track.appendChild(firstClone);
+	track.prepend(lastClone);
+
+	// Start at position 1 (the real first slide, after the prepended clone)
+	let position = 1;
+	track.style.transition = 'none';
+	track.style.transform = `translateX(-${position * 100}%)`;
+
+	function updateDots(index: number) {
+		dots.forEach((d, i) => d.classList.toggle('active', i === index));
+	}
+
+	function goTo(newPosition: number) {
+		if (isTransitioning) return;
+		isTransitioning = true;
+		position = newPosition;
+		track.style.transition = 'transform 0.45s cubic-bezier(0.4, 0, 0.2, 1)';
+		track.style.transform = `translateX(-${position * 100}%)`;
+	}
+
+	track.addEventListener('transitionend', () => {
+		isTransitioning = false;
+		// If we landed on the appended first-clone, silently jump to real first
+		if (position === total + 1) {
+			track.style.transition = 'none';
+			position = 1;
+			track.style.transform = `translateX(-${position * 100}%)`;
+		}
+		// If we landed on the prepended last-clone, silently jump to real last
+		if (position === 0) {
+			track.style.transition = 'none';
+			position = total;
+			track.style.transform = `translateX(-${position * 100}%)`;
+		}
+		current = position - 1;
+		updateDots(current);
+	});
+
+	function next() { goTo(position + 1); }
+	function prev() { goTo(position - 1); }
+
+	function startAuto() {
+		timer = setInterval(next, 4000);
+	}
+
+	function resetAuto() {
+		clearInterval(timer);
+		startAuto();
+	}
+
+	document.getElementById('carousel-prev')?.addEventListener('click', () => { prev(); resetAuto(); });
+	document.getElementById('carousel-next')?.addEventListener('click', () => { next(); resetAuto(); });
+	dots.forEach((dot, i) => dot.addEventListener('click', () => {
+		goTo(i + 1);
+		resetAuto();
+	}));
+
+	updateDots(0);
+	startAuto();
+</script>

@@ -1,0 +1,335 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { SITE_TITLE } from '../../consts';
+import { projects } from '../../data/projects';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead
+			title={`Portfolio — ${SITE_TITLE}`}
+			description="A collection of my projects, resume, and skills that define my journey as a software engineer."
+		/>
+	</head>
+	<body>
+		<Header />
+
+		<main>
+			<div class="page-header">
+				<span class="section-label">Portfolio</span>
+				<h1>Turning Ideas into<br /><span class="gradient-text">Real Products</span></h1>
+				<p class="subtitle">
+					Here's a collection of my projects, resume, and skills that define my journey as a software engineer.
+				</p>
+				<div class="header-actions">
+					<a href="/resume" class="btn btn-outline">View Resume</a>
+					<a href="/portfolio#projects" class="btn btn-primary">See Projects</a>
+				</div>
+			</div>
+
+			<div class="stats-row">
+				<div class="stat-card">
+					<div class="stat-number">1+</div>
+					<div class="stat-label">Years of Experience</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-number">4+</div>
+					<div class="stat-label">Projects Completed</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-number">15+</div>
+					<div class="stat-label">Technologies</div>
+				</div>
+			</div>
+
+			<section id="projects">
+				<h2 class="section-title">Projects</h2>
+				<div class="projects-grid">
+					{projects.map((project) => (
+						<a href={`/portfolio/${project.slug}`} class="project-card">
+							<div class="project-card-header">
+								<div class="project-icon">{project.title.charAt(0)}</div>
+								<span class={`status-badge status-${project.status.toLowerCase().replace(' ', '-')}`}>
+									{project.status}
+								</span>
+							</div>
+							<h3 class="project-title">{project.title}</h3>
+							<p class="project-desc">{project.description}</p>
+							<div class="project-tags">
+								{project.tags.map((tag) => (
+									<span class="tag-pill">{tag}</span>
+								))}
+							</div>
+							<div class="project-footer">
+								<span class="project-date">{project.date}</span>
+								<span class="project-arrow">→</span>
+							</div>
+						</a>
+					))}
+				</div>
+			</section>
+		</main>
+
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		max-width: 1100px;
+		margin: 0 auto;
+		padding: 3em 2em 5em;
+	}
+
+	.page-header { margin-bottom: 3rem; }
+
+	.section-label {
+		display: inline-block;
+		font-size: 0.72em;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: var(--accent);
+		background: var(--accent-dim);
+		border: 1px solid var(--accent-border);
+		padding: 0.3em 0.9em;
+		border-radius: 999px;
+		margin-bottom: 1rem;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+	}
+
+	.page-header h1 {
+		font-size: clamp(2rem, 5vw, 3.2rem);
+		line-height: 1.1;
+		margin-bottom: 1rem;
+		color: var(--text);
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+		letter-spacing: -0.03em;
+	}
+
+	.gradient-text {
+		background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
+
+	.subtitle {
+		color: var(--text-muted);
+		font-size: 1em;
+		max-width: 520px;
+		margin-bottom: 1.5rem;
+	}
+
+	.header-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+	/* Buttons */
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5em;
+		padding: 0.6em 1.4em;
+		border-radius: 8px;
+		font-size: 0.9em;
+		font-weight: 600;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+		cursor: pointer;
+		transition: all 0.2s ease;
+		text-decoration: none;
+		border: none;
+	}
+
+	.btn-primary {
+		background: var(--accent);
+		color: #fff;
+	}
+
+	.btn-primary:hover {
+		background: var(--accent-hover);
+		color: #fff;
+		transform: translateY(-1px);
+		box-shadow: var(--shadow-accent);
+	}
+
+	.btn-outline {
+		background: transparent;
+		color: var(--text);
+		border: 1px solid var(--border);
+	}
+
+	.btn-outline:hover {
+		background: var(--bg-card);
+		border-color: var(--accent);
+		color: var(--accent);
+	}
+
+	/* Stats */
+	.stats-row {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1rem;
+		margin-bottom: 3rem;
+	}
+
+	.stat-card {
+		padding: 1.5rem;
+		text-align: center;
+		border-radius: 12px;
+		background: var(--bg-card);
+		border: 1px solid var(--border);
+		transition: background 0.3s, border-color 0.3s;
+	}
+
+	.stat-number {
+		font-size: 2.5em;
+		font-weight: 800;
+		color: var(--accent);
+		line-height: 1;
+		margin-bottom: 0.3rem;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+	}
+
+	.stat-label {
+		font-size: 0.85em;
+		color: var(--text-muted);
+	}
+
+	/* Projects */
+	.section-title {
+		font-size: 1.4em;
+		color: var(--text);
+		margin-bottom: 1.5rem;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+	}
+
+	.projects-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+		gap: 1.5rem;
+	}
+
+	.project-card {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		padding: 1.5rem;
+		text-decoration: none;
+		color: inherit;
+		border-radius: 12px;
+		background: var(--bg-card);
+		border: 1px solid var(--border);
+		transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+	}
+
+	.project-card:hover {
+		border-color: var(--accent-border);
+		transform: translateY(-2px);
+		box-shadow: var(--shadow-md);
+	}
+
+	.project-card-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.project-icon {
+		width: 42px;
+		height: 42px;
+		border-radius: 10px;
+		background: var(--accent);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.1em;
+		font-weight: 700;
+		color: #fff;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+	}
+
+	.status-badge {
+		font-size: 0.7em;
+		font-weight: 600;
+		padding: 0.2em 0.7em;
+		border-radius: 999px;
+	}
+
+	.status-completed {
+		background: rgba(16, 185, 129, 0.15);
+		color: #059669;
+		border: 1px solid rgba(16, 185, 129, 0.3);
+	}
+
+	/* In light mode, green needs to be darker */
+	:root[data-theme="light"] .status-completed { color: #065f46; }
+
+	.status-in-progress {
+		background: rgba(245, 158, 11, 0.15);
+		color: #d97706;
+		border: 1px solid rgba(245, 158, 11, 0.3);
+	}
+
+	.status-archived {
+		background: var(--bg-card-hover);
+		color: var(--text-dim);
+		border: 1px solid var(--border);
+	}
+
+	.project-title {
+		font-size: 1.1em;
+		color: var(--text);
+		margin: 0;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+	}
+
+	.project-desc {
+		font-size: 0.85em;
+		color: var(--text-muted);
+		margin: 0;
+		line-height: 1.6;
+	}
+
+	.project-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+	.tag-pill {
+		font-size: 0.7em;
+		font-weight: 600;
+		color: var(--accent);
+		background: var(--accent-dim);
+		border: 1px solid var(--accent-border);
+		padding: 0.15em 0.6em;
+		border-radius: 999px;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+	}
+
+	.project-footer {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-top: auto;
+		padding-top: 0.5rem;
+		border-top: 1px solid var(--border);
+	}
+
+	.project-date { font-size: 0.78em; color: var(--text-dim); }
+
+	.project-arrow {
+		color: var(--text-dim);
+		transition: transform 0.2s, color 0.2s;
+	}
+
+	.project-card:hover .project-arrow {
+		transform: translateX(4px);
+		color: var(--accent);
+	}
+
+	@media (max-width: 720px) {
+		main { padding: 2em 1em 4em; }
+		.stats-row { gap: 0.75rem; }
+		.stat-number { font-size: 1.8em; }
+		.projects-grid { grid-template-columns: 1fr; }
+	}
+</style>

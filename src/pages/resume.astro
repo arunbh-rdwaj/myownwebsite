@@ -1,0 +1,577 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead
+			title={`Resume — ${SITE_TITLE}`}
+			description="Software Engineer at LSEG specializing in automation engineering and cloud-based testing for large-scale financial infrastructure."
+		/>
+	</head>
+	<body>
+		<Header />
+
+		<main>
+			<div class="resume-header">
+				<div>
+					<h1>Resume</h1>
+					<p class="subtitle">
+						Software Engineer at LSEG specializing in automation engineering and cloud-based testing
+						for large-scale financial infrastructure.
+					</p>
+				</div>
+				<a href="/Arun_Bhardwaj_Resume.pdf" download class="btn btn-outline">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+						<polyline points="7 10 12 15 17 10"/>
+						<line x1="12" y1="15" x2="12" y2="3"/>
+					</svg>
+					Download PDF
+				</a>
+			</div>
+
+			<div class="resume-layout">
+				<!-- Tab navigation -->
+				<nav class="tab-nav" id="tab-nav" aria-label="Resume sections">
+					<button class="tab-btn active" data-tab="overview">Overview</button>
+					<button class="tab-btn" data-tab="experience">Experience</button>
+					<button class="tab-btn" data-tab="education">Education</button>
+					<button class="tab-btn" data-tab="skills">Skills</button>
+					<button class="tab-btn" data-tab="certifications">Achievements</button>
+				</nav>
+
+				<!-- Tab content -->
+				<div class="tab-content">
+
+					<!-- Overview -->
+					<section class="tab-panel active" id="tab-overview">
+						<div class="section-block">
+							<h2 class="section-heading">Professional Summary</h2>
+							<div class="summary-card timeline-item">
+								<p>
+									Software Engineer at LSEG specializing in automation engineering and cloud-based
+									testing for large-scale financial infrastructure. <strong>Proficient in C++, Python,
+									and Node.js</strong> across AWS, Azure, and GCP environments.
+								</p>
+								<p>
+									Beyond my day-to-day work, I've built deep learning models and full-stack web
+									applications — reflecting a broader software engineering foundation I'm actively
+									putting to use. Strong in DSA, system design, and ML concepts.
+								</p>
+							</div>
+						</div>
+
+						<div class="section-block">
+							<h2 class="section-heading">Experience</h2>
+							<div class="timeline">
+								<div class="timeline-item">
+									<div class="timeline-header">
+										<div>
+											<h3 class="job-title">Software Engineer</h3>
+											<p class="company">London Stock Exchange Group (LSEG)</p>
+										</div>
+										<span class="date-range">Aug 2024 – Present</span>
+									</div>
+									<ul class="job-bullets">
+										<li>Contributed to Firedrill, Christmas and V17 cloud testing</li>
+										<li>Utilized Calypso and CATT tools for system integration and end-to-end validation of trading workflows in large-scale financial systems</li>
+										<li>Collaborated with cross-functional teams to ensure robust deployment and monitoring of production environments</li>
+										<li>Gained strong business domain knowledge in securities trading, trade lifecycle (front, middle, and back office), and financial market operations</li>
+									</ul>
+								</div>
+								<div class="timeline-item">
+									<div class="timeline-header">
+										<div>
+											<h3 class="job-title">Full Stack Engineer Intern</h3>
+											<p class="company">Cocurate</p>
+										</div>
+										<span class="date-range">Jan 2024 – Jun 2024</span>
+									</div>
+									<ul class="job-bullets">
+										<li>Contributed to the development of the MVP, focusing on database schema design and backend architecture setup</li>
+										<li>Demonstrated strong problem-solving and system design abilities during iterative development cycles</li>
+										<li>Recognized by the CEO for professionalism, initiative, and impactful technical contributions to early-stage product development</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+
+						<div class="section-block">
+							<h2 class="section-heading">Education</h2>
+							<div class="timeline-item">
+								<div class="timeline-header">
+									<div>
+										<h3 class="job-title">B.Tech in Information Technology</h3>
+										<p class="company">PSG College of Technology, Coimbatore, Tamil Nadu</p>
+									</div>
+									<span class="date-range">Nov 2020 – Apr 2024</span>
+								</div>
+								<p class="cgpa">CGPA: 8.36 / 10</p>
+							</div>
+						</div>
+					</section>
+
+					<!-- Experience -->
+					<section class="tab-panel" id="tab-experience">
+						<div class="section-block">
+							<h2 class="section-heading">Work Experience</h2>
+							<div class="timeline">
+								<div class="timeline-item">
+									<div class="timeline-header">
+										<div>
+											<h3 class="job-title">Software Engineer</h3>
+											<p class="company">London Stock Exchange Group (LSEG)</p>
+										</div>
+										<span class="date-range">Aug 2024 – Present</span>
+									</div>
+									<ul class="job-bullets">
+										<li>Contributed to Firedrill, Christmas and V17 cloud testing initiatives</li>
+										<li>Utilized Calypso and CATT tools for system integration and end-to-end validation of trading workflows in large-scale financial systems</li>
+										<li>Collaborated with cross-functional teams to ensure robust deployment and monitoring of production environments</li>
+										<li>Gained strong business domain knowledge in securities trading, trade lifecycle (front, middle, and back office), and financial market operations within a global fintech environment</li>
+									</ul>
+								</div>
+								<div class="timeline-item">
+									<div class="timeline-header">
+										<div>
+											<h3 class="job-title">Full Stack Engineer Intern</h3>
+											<p class="company">Cocurate</p>
+										</div>
+										<span class="date-range">Jan 2024 – Jun 2024</span>
+									</div>
+									<ul class="job-bullets">
+										<li>Contributed to the development of the MVP, focusing on database schema design and backend architecture setup</li>
+										<li>Demonstrated strong problem-solving and system design abilities during iterative development cycles</li>
+										<li>Recognized by the CEO for professionalism, initiative, and impactful technical contributions to early-stage product development</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<!-- Education -->
+					<section class="tab-panel" id="tab-education">
+						<div class="section-block">
+							<h2 class="section-heading">Education</h2>
+							<div class="timeline">
+								<div class="timeline-item">
+									<div class="timeline-header">
+										<div>
+											<h3 class="job-title">B.Tech in Information Technology</h3>
+											<p class="company">PSG College of Technology, Coimbatore, Tamil Nadu</p>
+										</div>
+										<span class="date-range">Nov 2020 – Apr 2024</span>
+									</div>
+									<p class="cgpa">CGPA: 8.36 / 10</p>
+									<ul class="job-bullets">
+										<li>Specialisation in Information Technology with focus on ML and full-stack development</li>
+										<li>Final year project: Diabetic Retinopathy Detection using ensemble deep learning models</li>
+										<li>Active participant in hackathons and technical competitions</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<!-- Skills -->
+					<section class="tab-panel" id="tab-skills">
+						<div class="section-block">
+							<h2 class="section-heading">Technical Skills</h2>
+							<div class="skills-grid">
+								<div class="skill-group">
+									<h4 class="skill-group-title">Languages</h4>
+									<div class="skill-tags">
+										{['C++', 'C', 'C#', 'Python', 'JavaScript', 'SQL', 'HTML', 'CSS'].map(s => (
+											<span class="skill-tag">{s}</span>
+										))}
+									</div>
+								</div>
+								<div class="skill-group">
+									<h4 class="skill-group-title">Frameworks</h4>
+									<div class="skill-tags">
+										{['Node.js', 'Express.js', 'Flask', 'Next.js'].map(s => (
+											<span class="skill-tag">{s}</span>
+										))}
+									</div>
+								</div>
+								<div class="skill-group">
+									<h4 class="skill-group-title">Databases</h4>
+									<div class="skill-tags">
+										{['MySQL', 'MongoDB', 'Firebase', 'PostgreSQL', 'PGVector'].map(s => (
+											<span class="skill-tag">{s}</span>
+										))}
+									</div>
+								</div>
+								<div class="skill-group">
+									<h4 class="skill-group-title">Cloud & DevOps</h4>
+									<div class="skill-tags">
+										{['AWS', 'Azure', 'GCP', 'Git', 'GitHub', 'Calypso', 'CATT', 'Control-M'].map(s => (
+											<span class="skill-tag">{s}</span>
+										))}
+									</div>
+								</div>
+								<div class="skill-group">
+									<h4 class="skill-group-title">AI & ML</h4>
+									<div class="skill-tags">
+										{['Machine Learning', 'Deep Learning', 'CNNs', 'LLMs', 'Prompt Engineering', 'RAG', 'AI Agents', 'Vector Databases'].map(s => (
+											<span class="skill-tag">{s}</span>
+										))}
+									</div>
+								</div>
+								<div class="skill-group">
+									<h4 class="skill-group-title">Core Skills</h4>
+									<div class="skill-tags">
+										{['Data Structures & Algorithms', 'System Design', 'REST APIs'].map(s => (
+											<span class="skill-tag">{s}</span>
+										))}
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<!-- Achievements & Certifications -->
+					<section class="tab-panel" id="tab-certifications">
+						<div class="section-block">
+							<h2 class="section-heading">Achievements</h2>
+							<div class="cert-list">
+								<div class="cert-item card">
+									<div class="cert-icon">🏆</div>
+									<div>
+										<h3 class="cert-title">AWS Game Day – 2nd Place</h3>
+										<p class="cert-meta">IGNITE APAC 2024 · Optimized infrastructure using EC2 and Load Balancers to reduce operational costs in a live simulation challenge</p>
+									</div>
+								</div>
+								<div class="cert-item card">
+									<div class="cert-icon">⚡</div>
+									<div>
+										<h3 class="cert-title">Zoho Catalyst Hackathon</h3>
+										<p class="cert-meta">Sep 2022 · Developed a Flask-based complaint registration portal with user authentication and admin management</p>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="section-block">
+							<h2 class="section-heading">Certifications</h2>
+							<div class="cert-list">
+								<div class="cert-item card">
+									<div class="cert-icon">❄️</div>
+									<div>
+										<h3 class="cert-title">Snowflake Data Warehouse Essentials</h3>
+										<p class="cert-meta">Snowflake</p>
+									</div>
+								</div>
+								<div class="cert-item card">
+									<div class="cert-icon">🗄️</div>
+									<div>
+										<h3 class="cert-title">The Complete SQL Bootcamp</h3>
+										<p class="cert-meta">Udemy</p>
+									</div>
+								</div>
+								<div class="cert-item card">
+									<div class="cert-icon">💻</div>
+									<div>
+										<h3 class="cert-title">Foundation C# with Microsoft</h3>
+										<p class="cert-meta">FreeCodeCamp</p>
+									</div>
+								</div>
+								<div class="cert-item card">
+									<div class="cert-icon">🤖</div>
+									<div>
+										<h3 class="cert-title">Artificial Intelligence</h3>
+										<p class="cert-meta">Languify</p>
+									</div>
+								</div>
+								<div class="cert-item card">
+									<div class="cert-icon">📈</div>
+									<div>
+										<h3 class="cert-title">Securities Trade Lifecycle</h3>
+										<p class="cert-meta">Udemy</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+
+				</div>
+			</div>
+		</main>
+
+		<Footer />
+	</body>
+</html>
+
+<script>
+	const tabBtns = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
+	const tabPanels = document.querySelectorAll<HTMLElement>('.tab-panel');
+
+	tabBtns.forEach((btn) => {
+		btn.addEventListener('click', () => {
+			tabBtns.forEach((b) => b.classList.remove('active'));
+			tabPanels.forEach((p) => p.classList.remove('active'));
+			btn.classList.add('active');
+			const target = document.getElementById(`tab-${btn.dataset.tab}`);
+			if (target) target.classList.add('active');
+		});
+	});
+</script>
+
+<style>
+	main {
+		max-width: 900px;
+		margin: 0 auto;
+		padding: 3em 2em 5em;
+	}
+
+	.resume-header {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-bottom: 2.5rem;
+		flex-wrap: wrap;
+	}
+
+	.resume-header h1 {
+		font-size: 2.8em;
+		margin-bottom: 0.3em;
+	}
+
+	.subtitle {
+		color: var(--text-muted);
+		font-size: 0.95em;
+		margin: 0;
+		max-width: 500px;
+	}
+
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5em;
+		padding: 0.6em 1.3em;
+		border-radius: 8px;
+		font-size: 0.88em;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		text-decoration: none;
+		border: 1px solid var(--border);
+		white-space: nowrap;
+		background: transparent;
+		color: var(--text);
+	}
+
+	.btn:hover {
+		background: var(--bg-card);
+		border-color: var(--accent);
+		color: var(--accent);
+	}
+
+	.resume-layout {
+		display: grid;
+		grid-template-columns: 180px 1fr;
+		gap: 2rem;
+		align-items: start;
+	}
+
+	/* Tab nav */
+	.tab-nav {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		position: sticky;
+		top: 80px;
+	}
+
+	.tab-btn {
+		text-align: left;
+		padding: 0.6em 1em;
+		border-radius: 8px;
+		border: none;
+		background: transparent;
+		color: var(--text-muted);
+		font-size: 0.88em;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+	}
+
+	.tab-btn:hover {
+		background: var(--bg-card);
+		color: var(--text);
+	}
+
+	.tab-btn.active {
+		background: rgba(249, 115, 22, 0.12);
+		color: var(--accent);
+		font-weight: 600;
+		border-left: 2px solid var(--accent);
+	}
+
+	.tab-panel { display: none; }
+	.tab-panel.active { display: block; }
+
+	/* Section blocks */
+	.section-block { margin-bottom: 2.5rem; }
+
+	.section-heading {
+		font-size: 0.72em;
+		color: var(--text-dim);
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		margin-bottom: 1.25rem;
+		padding-bottom: 0.5rem;
+		border-bottom: 1px solid var(--border);
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+	}
+
+	/* Timeline */
+	.timeline { display: flex; flex-direction: column; gap: 1rem; }
+
+	.timeline-item {
+		padding: 1.2rem 1.4rem;
+		background: var(--bg-card);
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		transition: border-color 0.2s;
+	}
+
+	.timeline-item:hover { border-color: rgba(249, 115, 22, 0.25); }
+
+	.summary-card p {
+		font-size: 0.9em;
+		color: var(--text-muted);
+		margin-bottom: 0.75em;
+		line-height: 1.7;
+	}
+
+	.summary-card p:last-child { margin-bottom: 0; }
+
+	.summary-card strong { color: var(--text); }
+
+	.timeline-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: 1rem;
+		margin-bottom: 0.75rem;
+		flex-wrap: wrap;
+	}
+
+	.job-title {
+		font-size: 1em;
+		color: var(--text);
+		margin: 0 0 0.2em;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+		font-weight: 600;
+	}
+
+	.company {
+		font-size: 0.85em;
+		color: var(--accent);
+		margin: 0;
+		font-weight: 500;
+	}
+
+	.date-range {
+		font-size: 0.78em;
+		color: var(--text-dim);
+		white-space: nowrap;
+		padding-top: 0.2em;
+		font-style: italic;
+	}
+
+	.cgpa {
+		font-size: 0.85em;
+		color: var(--accent);
+		font-weight: 600;
+		margin: 0 0 0.75rem;
+	}
+
+	.job-bullets {
+		padding-left: 1.2em;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+	}
+
+	.job-bullets li {
+		font-size: 0.875em;
+		color: var(--text-muted);
+		line-height: 1.6;
+	}
+
+	/* Skills */
+	.skills-grid { display: flex; flex-direction: column; gap: 1.5rem; }
+
+	.skill-group-title {
+		font-size: 0.78em;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: var(--text-dim);
+		margin: 0 0 0.6rem;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+	}
+
+	.skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+	.skill-tag {
+		padding: 0.3em 0.85em;
+		border-radius: 6px;
+		font-size: 0.82em;
+		background: var(--bg-card);
+		border: 1px solid var(--border);
+		color: var(--text-muted);
+		transition: border-color 0.15s, color 0.15s;
+	}
+
+	.skill-tag:hover {
+		border-color: var(--accent);
+		color: var(--accent);
+	}
+
+	/* Certifications */
+	.cert-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+	.cert-item {
+		display: flex;
+		align-items: flex-start;
+		gap: 1rem;
+		padding: 1rem 1.2rem;
+		border-radius: 10px;
+	}
+
+	.cert-icon { font-size: 1.4em; flex-shrink: 0; margin-top: 0.1em; }
+
+	.cert-title {
+		font-size: 0.92em;
+		color: var(--text);
+		margin: 0 0 0.25em;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+		font-weight: 600;
+	}
+
+	.cert-meta {
+		font-size: 0.8em;
+		color: var(--text-muted);
+		margin: 0;
+		line-height: 1.5;
+	}
+
+	@media (max-width: 720px) {
+		main { padding: 2em 1em 4em; }
+		.resume-layout { grid-template-columns: 1fr; }
+		.tab-nav { position: static; flex-direction: row; flex-wrap: wrap; gap: 0.4rem; }
+		.tab-btn { padding: 0.4em 0.8em; font-size: 0.82em; border-left: none !important; }
+		.resume-header { flex-direction: column; }
+	}
+</style>
