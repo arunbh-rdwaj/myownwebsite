@@ -347,9 +347,16 @@ const latestPost = allPosts[0];
 		box-shadow: var(--shadow-md);
 	}
 
+	.post-card-image {
+		width: 100%;
+		height: 200px;
+		overflow: hidden;
+		flex-shrink: 0;
+	}
+
 	.post-card-image img {
 		width: 100%;
-		height: 180px;
+		height: 100%;
 		object-fit: cover;
 		border-radius: 0;
 		display: block;

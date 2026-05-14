@@ -4,6 +4,7 @@ description: "How Google is transforming Android from a mobile OS into an AI-fir
 pubDate: 2026-05-13
 category: "Artificial Intelligence"
 heroImage: "../../assets/android-ai-os-cover.png"
+heroImageAlt: Android Is Becoming an AI Operating System
 tags: ["Google","AI", "Android",  "Gemini", "Tech"]
 author: "Your Name"
 ---

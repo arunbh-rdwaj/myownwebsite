@@ -11,6 +11,12 @@ export default defineConfig({
   site: 'https://example.com',
   integrations: [mdx(), sitemap()],
 
+  markdown: {
+    shikiConfig: {
+      theme: 'github-dark',
+    },
+  },
+
   fonts: [
     {
       provider: fontProviders.google(),

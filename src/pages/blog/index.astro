@@ -11,7 +11,20 @@ const allPosts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 
-const allCategories = ['All', ...new Set(allPosts.flatMap((p) => p.data.tags ?? []))];
+// Count tag frequency and pick the top 10
+const tagCounts = allPosts
+	.flatMap((p) => p.data.tags ?? [])
+	.reduce<Record<string, number>>((acc, tag) => {
+		acc[tag] = (acc[tag] ?? 0) + 1;
+		return acc;
+	}, {});
+
+const top10Tags = Object.entries(tagCounts)
+	.sort((a, b) => b[1] - a[1])
+	.slice(0, 10)
+	.map(([tag]) => tag);
+
+const allCategories = ['All', ...top10Tags];
 ---
 
 <!doctype html>
@@ -36,6 +49,7 @@ const allCategories = ['All', ...new Set(allPosts.flatMap((p) => p.data.tags ?? 
 						</button>
 					))}
 				</div>
+				<a href="/categories" class="all-categories-btn">Browse all categories →</a>
 			</div>
 
 			<p class="results-count" id="results-count"></p>
@@ -136,7 +150,31 @@ const allCategories = ['All', ...new Set(allPosts.flatMap((p) => p.data.tags ?? 
 
 	/* Controls */
 	.blog-controls {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.75rem;
+		flex-wrap: wrap;
 		margin-bottom: 1.5rem;
+	}
+
+	.all-categories-btn {
+		flex-shrink: 0;
+		padding: 0.35em 1em;
+		border-radius: 999px;
+		border: 1px solid var(--accent-border);
+		background: transparent;
+		color: var(--accent);
+		font-size: 0.85em;
+		cursor: pointer;
+		text-decoration: none;
+		font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+		transition: all 0.2s ease;
+		white-space: nowrap;
+	}
+
+	.all-categories-btn:hover {
+		background: var(--accent);
+		color: #fff;
 	}
 
 	/* Filter tabs */

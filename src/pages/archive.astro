@@ -1,0 +1,261 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+
+const allPosts = await getCollection('blog');
+
+// Sort newest first
+const sorted = allPosts.sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+// Group by year
+const byYear = new Map<number, typeof sorted>();
+for (const post of sorted) {
+	const year = post.data.pubDate.getFullYear();
+	if (!byYear.has(year)) byYear.set(year, []);
+	byYear.get(year)!.push(post);
+}
+
+// Descending year order
+const years = [...byYear.keys()].sort((a, b) => b - a);
+
+function formatDay(date: Date) {
+	return String(date.getDate()).padStart(2, '0');
+}
+
+function formatMonth(date: Date) {
+	return date.toLocaleString('en-US', { month: 'short' });
+}
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Archive — ${SITE_TITLE}`} description="A chronological archive of all blog posts." />
+	</head>
+	<body>
+		<Header />
+
+		<main>
+			<div class="page-header">
+				<h1>Archives</h1>
+			</div>
+
+			{years.map((year) => (
+				<section class="year-section">
+					<div class="year-row">
+						<span class="year-label">{year}</span>
+						<div class="year-dot-line">
+							<span class="dot year-dot" />
+							<span class="line" />
+						</div>
+					</div>
+
+					<ul class="post-list">
+						{byYear.get(year)!.map((post) => (
+							<li class="post-row">
+								<div class="date-col">
+									<span class="day">{formatDay(post.data.pubDate)}</span>
+									<span class="month">{formatMonth(post.data.pubDate)}</span>
+								</div>
+								<div class="connector">
+									<span class="dot post-dot" />
+								</div>
+								<a href={`/blog/${post.id}/`} class="post-title">
+									{post.data.title}
+								</a>
+							</li>
+						))}
+					</ul>
+				</section>
+			))}
+		</main>
+
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		max-width: 860px;
+		margin: 0 auto;
+		padding: 3em 1.5em 5em;
+	}
+
+	.page-header {
+		margin-bottom: 2.5rem;
+	}
+
+	.page-header h1 {
+		font-size: 2.8em;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+		letter-spacing: -0.03em;
+		color: var(--text);
+		margin: 0;
+	}
+
+	/* ── Year row ── */
+	.year-section {
+		margin-bottom: 0.5rem;
+	}
+
+	.year-row {
+		display: flex;
+		align-items: center;
+		gap: 0;
+		margin-bottom: 0;
+	}
+
+	.year-label {
+		font-size: 1.5em;
+		font-weight: 700;
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+		color: var(--text);
+		width: 5rem;
+		flex-shrink: 0;
+	}
+
+	.year-dot-line {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 1.5rem;
+		flex-shrink: 0;
+	}
+
+	.dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: var(--text-muted);
+		flex-shrink: 0;
+	}
+
+	.year-dot {
+		background: var(--text-muted);
+	}
+
+	.line {
+		width: 1px;
+		flex: 1;
+		background: var(--border);
+		min-height: 12px;
+	}
+
+	/* ── Post list ── */
+	.post-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.post-row {
+		display: flex;
+		align-items: center;
+		gap: 0;
+		padding: 0.55rem 0;
+		border-radius: 8px;
+		transition: background 0.15s;
+	}
+
+	.post-row:hover {
+		background: var(--bg-card);
+	}
+
+	/* Date column */
+	.date-col {
+		display: flex;
+		align-items: baseline;
+		gap: 0.35rem;
+		width: 5rem;
+		flex-shrink: 0;
+		padding-left: 0.25rem;
+	}
+
+	.day {
+		font-size: 1em;
+		font-weight: 700;
+		color: var(--text);
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+		min-width: 1.6rem;
+		text-align: right;
+	}
+
+	.month {
+		font-size: 0.8em;
+		color: var(--text-muted);
+		font-weight: 500;
+	}
+
+	/* Connector column (dot + vertical line) */
+	.connector {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 1.5rem;
+		align-self: stretch;
+		flex-shrink: 0;
+		position: relative;
+	}
+
+	.connector::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 1px;
+		background: var(--border);
+	}
+
+	.post-dot {
+		position: relative;
+		z-index: 1;
+		background: var(--text-dim);
+		width: 7px;
+		height: 7px;
+		margin-top: 0.45rem;
+	}
+
+	/* Post title link */
+	.post-title {
+		flex: 1;
+		font-size: 0.95em;
+		color: var(--accent);
+		text-decoration: none;
+		font-weight: 500;
+		padding: 0 0.75rem;
+		line-height: 1.4;
+		transition: color 0.15s;
+	}
+
+	.post-title:hover {
+		color: var(--accent-hover);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	/* Last post in a year — no dangling line below */
+	.post-list li:last-child .connector::before {
+		bottom: 50%;
+	}
+
+	@media (max-width: 600px) {
+		main { padding: 2em 1em 4em; }
+
+		.page-header h1 { font-size: 2em; }
+
+		.year-label { font-size: 1.2em; width: 4rem; }
+
+		.date-col { width: 4rem; }
+
+		.day { font-size: 0.9em; }
+
+		.post-title { font-size: 0.88em; }
+	}
+</style>
