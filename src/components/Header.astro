@@ -6,7 +6,7 @@ import HeaderLink from './HeaderLink.astro';
 	<nav>
 		<a href="/" class="logo">Arun Bhardwaj</a>
 
-		<div class="internal-links">
+		<div class="internal-links" id="nav-links">
 			<HeaderLink href="/">Home</HeaderLink>
 			<HeaderLink href="/blog">Blog</HeaderLink>
 			<HeaderLink href="/categories">Categories</HeaderLink>
@@ -49,6 +49,13 @@ import HeaderLink from './HeaderLink.astro';
 				</a>
 			</div>
 
+			<!-- Hamburger (mobile only) -->
+			<button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+				<span></span>
+				<span></span>
+				<span></span>
+			</button>
+
 			<!-- Theme toggle -->
 			<button id="theme-toggle" aria-label="Toggle light/dark mode" title="Toggle theme">
 				<!-- Sun icon (shown in dark mode, click to go light) -->
@@ -73,6 +80,25 @@ import HeaderLink from './HeaderLink.astro';
 </header>
 
 <script>
+	// ── Hamburger menu ──
+	const hamburger = document.getElementById('hamburger') as HTMLButtonElement;
+	const navLinks = document.getElementById('nav-links') as HTMLElement;
+
+	hamburger?.addEventListener('click', () => {
+		const isOpen = navLinks.classList.toggle('open');
+		hamburger.setAttribute('aria-expanded', String(isOpen));
+		hamburger.classList.toggle('open', isOpen);
+	});
+
+	// Close nav when a link is clicked (mobile)
+	navLinks?.querySelectorAll('a').forEach((link) => {
+		link.addEventListener('click', () => {
+			navLinks.classList.remove('open');
+			hamburger?.classList.remove('open');
+			hamburger?.setAttribute('aria-expanded', 'false');
+		});
+	});
+
 	// ── Theme (default: light) ──
 	const root = document.documentElement;
 	const btn = document.getElementById('theme-toggle');
@@ -415,9 +441,70 @@ import HeaderLink from './HeaderLink.astro';
 
 	@media (max-width: 720px) {
 		header { padding: 0 1em; }
-		nav { height: auto; padding: 0.6em 0; flex-wrap: wrap; gap: 0.4rem; }
-		.internal-links :global(a) { padding: 0.3em 0.55em; font-size: 0.82em; }
+		nav { height: 56px; flex-wrap: nowrap; gap: 0.5rem; }
+
+		.internal-links {
+			display: none;
+			position: absolute;
+			top: 56px;
+			left: 0;
+			right: 0;
+			background: color-mix(in srgb, var(--bg) 97%, transparent);
+			backdrop-filter: blur(16px);
+			-webkit-backdrop-filter: blur(16px);
+			border-bottom: 1px solid var(--border);
+			padding: 0.75rem 1rem 1rem;
+			flex-direction: column;
+			gap: 0.15rem;
+			z-index: 99;
+		}
+
+		.internal-links.open { display: flex; }
+
+		.internal-links :global(a) {
+			padding: 0.6em 0.75em;
+			font-size: 0.95em;
+			border-radius: 8px;
+		}
+
 		.social-links { display: none; }
 		.search-dropdown { width: calc(100vw - 2rem); right: -1rem; }
+
+		/* Hamburger */
+		.hamburger {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			gap: 4px;
+			width: 34px;
+			height: 34px;
+			padding: 6px;
+			border: 1px solid var(--border);
+			border-radius: 7px;
+			background: var(--bg-card);
+			cursor: pointer;
+			transition: background 0.15s, border-color 0.15s;
+		}
+
+		.hamburger span {
+			display: block;
+			width: 100%;
+			height: 2px;
+			background: var(--text-muted);
+			border-radius: 2px;
+			transition: transform 0.25s ease, opacity 0.25s ease;
+			transform-origin: center;
+		}
+
+		.hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+		.hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+		.hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+		.hamburger:hover { background: var(--accent-dim); border-color: var(--accent-border); }
+	}
+
+	/* Hamburger hidden on desktop */
+	@media (min-width: 721px) {
+		.hamburger { display: none; }
 	}
 </style>

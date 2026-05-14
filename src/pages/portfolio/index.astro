@@ -79,9 +79,10 @@ import { projects } from '../../data/projects';
 
 <style>
 	main {
+		width: 100%;
 		max-width: 1100px;
 		margin: 0 auto;
-		padding: 3em 2em 5em;
+		padding: 3em 1.25em 5em;
 	}
 
 	.page-header { margin-bottom: 3rem; }
@@ -331,5 +332,15 @@ import { projects } from '../../data/projects';
 		.stats-row { gap: 0.75rem; }
 		.stat-number { font-size: 1.8em; }
 		.projects-grid { grid-template-columns: 1fr; }
+	}
+
+	@media (max-width: 480px) {
+		.page-header h1 { font-size: clamp(1.7rem, 7vw, 2.5rem); }
+		.header-actions { flex-direction: column; gap: 0.75rem; }
+		.header-actions .btn { width: 100%; justify-content: center; }
+		.stats-row { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+		.stat-card { padding: 1rem 0.5rem; }
+		.stat-number { font-size: 1.5em; }
+		.stat-label { font-size: 0.75em; }
 	}
 </style>

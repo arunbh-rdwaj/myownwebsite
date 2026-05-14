@@ -347,4 +347,11 @@ const { project } = Astro.props;
 		.project-layout { grid-template-columns: 1fr; padding: 2em 1em 4em; }
 		.project-sidebar { position: static; }
 	}
+
+	@media (max-width: 480px) {
+		.project-title { font-size: clamp(1.6rem, 6vw, 2.2rem); }
+		.project-actions { flex-direction: column; gap: 0.75rem; }
+		.project-actions .btn { width: 100%; justify-content: center; }
+		.project-image-placeholder { height: 180px; }
+	}
 </style>

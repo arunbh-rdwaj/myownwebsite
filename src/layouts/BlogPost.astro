@@ -344,4 +344,13 @@ const { title, description, pubDate, updatedDate, heroImage, heroImageAlt, tags 
 		.post-layout { grid-template-columns: 1fr; padding: 2em 1em 4em; }
 		.toc-sidebar { display: none; }
 	}
+
+	@media (max-width: 480px) {
+		.post-layout { padding: 1.5em 1em 3em; }
+		.post-title { font-size: clamp(1.5rem, 6vw, 2rem); }
+		.post-desc { font-size: 0.95em; }
+		.hero-image { border-radius: 8px; }
+		.prose :global(h2) { font-size: 1.35em; }
+		.prose :global(h3) { font-size: 1.1em; }
+	}
 </style>

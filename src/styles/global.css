@@ -59,6 +59,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -71,16 +72,17 @@ body {
   line-height: 1.75;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background 0.3s ease, color 0.3s ease;
 }
 
 main {
-  width: 1100px;
-  max-width: calc(100% - 2em);
-  margin: auto;
-  padding: 3em 1em;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3em 1.25em;
 }
 
 /* ── Typography ── */
@@ -284,9 +286,15 @@ textarea, input, select {
 /* ── Responsive ── */
 @media (max-width: 720px) {
   body { font-size: 16px; }
-  main { padding: 1.5em 1em; }
-  h1 { font-size: 2.25rem; }
-  h2 { font-size: 1.75rem; }
+  main { padding: 1.5em 1rem; }
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+}
+
+@media (max-width: 480px) {
+  main { padding: 1.25em 0.875rem; }
+  h1 { font-size: 1.75rem; }
 }
 
 /* ── Accessibility ── */

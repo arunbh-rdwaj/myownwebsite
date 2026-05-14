@@ -52,7 +52,18 @@ const allCategories = ['All', ...top10Tags];
 				<a href="/categories" class="all-categories-btn">Browse all categories →</a>
 			</div>
 
-			<p class="results-count" id="results-count"></p>
+			<div class="list-toolbar">
+				<p class="results-count" id="results-count"></p>
+				<div class="per-page-wrap">
+					<span class="per-page-label">Show:</span>
+					<div class="per-page-btns" id="per-page-btns">
+						<button class="per-page-btn active" data-per-page="10">10</button>
+						<button class="per-page-btn" data-per-page="25">25</button>
+						<button class="per-page-btn" data-per-page="50">50</button>
+						<button class="per-page-btn" data-per-page="100">100</button>
+					</div>
+				</div>
+			</div>
 
 			<div class="posts-list" id="posts-list">
 				{allPosts.map((post) => (
@@ -87,6 +98,9 @@ const allCategories = ['All', ...top10Tags];
 			</div>
 
 			<p class="no-results" id="no-results" style="display:none">No posts found.</p>
+
+			<!-- Pagination -->
+			<div class="pagination" id="pagination" aria-label="Pagination"></div>
 		</main>
 
 		<Footer />
@@ -95,41 +109,172 @@ const allCategories = ['All', ...top10Tags];
 
 <script>
 	const filterBtns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
-	const postRows = document.querySelectorAll<HTMLElement>('.post-row');
+	const perPageBtns = document.querySelectorAll<HTMLButtonElement>('.per-page-btn');
+	const allRows = Array.from(document.querySelectorAll<HTMLElement>('.post-row'));
 	const noResults = document.getElementById('no-results') as HTMLElement;
 	const resultsCount = document.getElementById('results-count') as HTMLElement;
+	const pagination = document.getElementById('pagination') as HTMLElement;
 
 	let activeTag = 'All';
+	let perPage = 10;
+	let currentPage = 1;
 
-	function applyFilters() {
-		let visible = 0;
-		postRows.forEach((row) => {
+	// Returns rows that match the active tag filter
+	function getFilteredRows(): HTMLElement[] {
+		return allRows.filter((row) => {
 			const tags = (row.dataset.tags ?? '').split('|||').filter(Boolean);
-			const show = activeTag === 'All' || tags.includes(activeTag);
-			row.style.display = show ? '' : 'none';
-			if (show) visible++;
+			return activeTag === 'All' || tags.includes(activeTag);
 		});
-		noResults.style.display = visible === 0 ? '' : 'none';
-		resultsCount.textContent = activeTag !== 'All'
-			? `${visible} post${visible !== 1 ? 's' : ''} found`
-			: '';
 	}
 
+	function render() {
+		const filtered = getFilteredRows();
+		const total = filtered.length;
+		const totalPages = Math.max(1, Math.ceil(total / perPage));
+
+		// Clamp current page
+		if (currentPage > totalPages) currentPage = totalPages;
+
+		const start = (currentPage - 1) * perPage;
+		const end = start + perPage;
+
+		// Show/hide all rows
+		allRows.forEach((row) => (row.style.display = 'none'));
+		filtered.slice(start, end).forEach((row) => (row.style.display = ''));
+
+		// No results message
+		noResults.style.display = total === 0 ? '' : 'none';
+
+		// Results count
+		if (activeTag !== 'All') {
+			resultsCount.textContent = `${total} post${total !== 1 ? 's' : ''} found`;
+		} else {
+			resultsCount.textContent = total > perPage
+				? `Showing ${start + 1}–${Math.min(end, total)} of ${total} posts`
+				: '';
+		}
+
+		// Build pagination
+		buildPagination(totalPages);
+	}
+
+	function buildPagination(totalPages: number) {
+		pagination.innerHTML = '';
+		if (totalPages <= 1) return;
+
+		const filtered = getFilteredRows();
+		const total = filtered.length;
+
+		// Helper to create a button
+		function makeBtn(label: string, page: number, isCurrent: boolean, isDisabled: boolean) {
+			const btn = document.createElement('button');
+			btn.className = 'page-btn' + (isCurrent ? ' active' : '') + (isDisabled ? ' disabled' : '');
+			btn.textContent = label;
+			btn.setAttribute('aria-label', `Page ${page}`);
+			if (isCurrent) btn.setAttribute('aria-current', 'page');
+			if (!isDisabled && !isCurrent) {
+				btn.addEventListener('click', () => {
+					currentPage = page;
+					render();
+					// Scroll back to top of list
+					document.getElementById('posts-list')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+				});
+			}
+			return btn;
+		}
+
+		// Prev
+		const prev = document.createElement('button');
+		prev.className = 'page-btn page-nav' + (currentPage === 1 ? ' disabled' : '');
+		prev.textContent = '←';
+		prev.setAttribute('aria-label', 'Previous page');
+		if (currentPage > 1) {
+			prev.addEventListener('click', () => {
+				currentPage--;
+				render();
+				document.getElementById('posts-list')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			});
+		}
+		pagination.appendChild(prev);
+
+		// Page numbers with ellipsis
+		const pages: (number | '...')[] = [];
+		if (totalPages <= 7) {
+			for (let i = 1; i <= totalPages; i++) pages.push(i);
+		} else {
+			pages.push(1);
+			if (currentPage > 3) pages.push('...');
+			for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+				pages.push(i);
+			}
+			if (currentPage < totalPages - 2) pages.push('...');
+			pages.push(totalPages);
+		}
+
+		pages.forEach((p) => {
+			if (p === '...') {
+				const ellipsis = document.createElement('span');
+				ellipsis.className = 'page-ellipsis';
+				ellipsis.textContent = '…';
+				pagination.appendChild(ellipsis);
+			} else {
+				pagination.appendChild(makeBtn(String(p), p, p === currentPage, false));
+			}
+		});
+
+		// Next
+		const next = document.createElement('button');
+		next.className = 'page-btn page-nav' + (currentPage === totalPages ? ' disabled' : '');
+		next.textContent = '→';
+		next.setAttribute('aria-label', 'Next page');
+		if (currentPage < totalPages) {
+			next.addEventListener('click', () => {
+				currentPage++;
+				render();
+				document.getElementById('posts-list')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			});
+		}
+		pagination.appendChild(next);
+
+		// Page info
+		const info = document.createElement('span');
+		info.className = 'page-info';
+		info.textContent = `Page ${currentPage} of ${totalPages}`;
+		pagination.appendChild(info);
+	}
+
+	// Tag filter
 	filterBtns.forEach((btn) => {
 		btn.addEventListener('click', () => {
 			filterBtns.forEach((b) => b.classList.remove('active'));
 			btn.classList.add('active');
 			activeTag = btn.dataset.category ?? 'All';
-			applyFilters();
+			currentPage = 1;
+			render();
 		});
 	});
+
+	// Per-page selector
+	perPageBtns.forEach((btn) => {
+		btn.addEventListener('click', () => {
+			perPageBtns.forEach((b) => b.classList.remove('active'));
+			btn.classList.add('active');
+			perPage = parseInt(btn.dataset.perPage ?? '10', 10);
+			currentPage = 1;
+			render();
+		});
+	});
+
+	// Initial render
+	render();
 </script>
 
 <style>
 	main {
+		width: 100%;
 		max-width: 860px;
 		margin: 0 auto;
-		padding: 3em 1.5em 5em;
+		padding: 3em 1.25em 5em;
 	}
 
 	.blog-header { margin-bottom: 2rem; }
@@ -154,7 +299,7 @@ const allCategories = ['All', ...top10Tags];
 		align-items: flex-start;
 		gap: 0.75rem;
 		flex-wrap: wrap;
-		margin-bottom: 1.5rem;
+		margin-bottom: 1.25rem;
 	}
 
 	.all-categories-btn {
@@ -208,11 +353,65 @@ const allCategories = ['All', ...top10Tags];
 		color: #fff;
 	}
 
+	/* Toolbar: results count + per-page */
+	.list-toolbar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-bottom: 1rem;
+		flex-wrap: wrap;
+	}
+
 	.results-count {
 		font-size: 0.82em;
 		color: var(--text-dim);
-		margin: 0 0 1rem;
+		margin: 0;
 		min-height: 1.2em;
+	}
+
+	.per-page-wrap {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		flex-shrink: 0;
+	}
+
+	.per-page-label {
+		font-size: 0.8em;
+		color: var(--text-dim);
+		font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+	}
+
+	.per-page-btns {
+		display: flex;
+		gap: 0.25rem;
+	}
+
+	.per-page-btn {
+		padding: 0.25em 0.65em;
+		border-radius: 6px;
+		border: 1px solid var(--border);
+		background: transparent;
+		color: var(--text-muted);
+		font-size: 0.8em;
+		cursor: pointer;
+		transition: all 0.15s ease;
+		font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+		line-height: 1.5;
+	}
+
+	.per-page-btn:hover {
+		border-color: var(--accent-border);
+		color: var(--text);
+		background: var(--accent-dim);
+	}
+
+	.per-page-btn.active {
+		background: var(--accent);
+		border-color: var(--accent);
+		color: #fff;
+		font-weight: 600;
 	}
 
 	/* Posts list */
@@ -323,8 +522,104 @@ const allCategories = ['All', ...top10Tags];
 		color: var(--accent);
 	}
 
+	/* ── Pagination ── */
+	.pagination {
+		display: flex;
+		align-items: center;
+		gap: 0.35rem;
+		margin-top: 2rem;
+		flex-wrap: wrap;
+	}
+
+	:global(.page-btn) {
+		min-width: 36px;
+		height: 36px;
+		padding: 0 0.6em;
+		border-radius: 8px;
+		border: 1px solid var(--border);
+		background: transparent;
+		color: var(--text-muted);
+		font-size: 0.88em;
+		font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+		cursor: pointer;
+		transition: all 0.15s ease;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	:global(.page-btn:hover:not(.disabled):not(.active)) {
+		border-color: var(--accent-border);
+		color: var(--text);
+		background: var(--accent-dim);
+	}
+
+	:global(.page-btn.active) {
+		background: var(--accent);
+		border-color: var(--accent);
+		color: #fff;
+		font-weight: 600;
+		cursor: default;
+	}
+
+	:global(.page-btn.disabled) {
+		opacity: 0.35;
+		cursor: default;
+		pointer-events: none;
+	}
+
+	:global(.page-nav) {
+		font-size: 1em;
+		color: var(--text-dim);
+	}
+
+	:global(.page-ellipsis) {
+		color: var(--text-dim);
+		font-size: 0.88em;
+		padding: 0 0.25em;
+		user-select: none;
+	}
+
+	:global(.page-info) {
+		font-size: 0.78em;
+		color: var(--text-dim);
+		margin-left: 0.5rem;
+		white-space: nowrap;
+	}
+
 	@media (max-width: 600px) {
-		.post-row-image { display: none; }
+		main { padding: 1.5em 1rem 3em; }
+		.blog-header h1 { font-size: 1.8em; }
+		.blog-controls { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+		.filter-tabs {
+			overflow-x: auto;
+			flex-wrap: nowrap;
+			padding-bottom: 0.25rem;
+			-webkit-overflow-scrolling: touch;
+			scrollbar-width: none;
+		}
+		.filter-tabs::-webkit-scrollbar { display: none; }
+		.filter-btn { flex-shrink: 0; }
+		.all-categories-btn { align-self: flex-start; }
+		.list-toolbar { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+		.post-row {
+			flex-direction: column;
+			align-items: stretch;
+			gap: 0;
+			padding: 0;
+			overflow: hidden;
+		}
+		.post-row-image {
+			display: block;
+			width: 100%;
+			height: 160px;
+			border-radius: 0;
+		}
+		.post-row-image img { border-radius: 0; }
+		.post-row-body { padding: 0.9rem 1rem 1rem; }
 		.post-row-arrow { display: none; }
+		.post-row-title { font-size: 0.98em; }
+		:global(.page-info) { display: none; }
+		:global(.page-btn) { min-width: 32px; height: 32px; font-size: 0.82em; }
 	}
 </style>
