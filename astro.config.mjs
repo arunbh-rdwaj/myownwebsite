@@ -6,46 +6,45 @@ import { defineConfig, fontProviders } from 'astro/config';
 
 import tailwindcss from '@tailwindcss/vite';
 
-import cloudflare from '@astrojs/cloudflare';
-
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://example.com',
-  integrations: [mdx(), sitemap()],
+	site: 'https://bhardwajarun.com',
 
-  markdown: {
-    shikiConfig: {
-      theme: 'github-dark',
-    },
-  },
+	output: 'static',
 
-  fonts: [
-    {
-      provider: fontProviders.google(),
-      name: 'Space Grotesk',
-      cssVariable: '--font-heading',
-      fallbacks: ['system-ui', 'sans-serif'],
-      weights: [400, 500, 600, 700],
-    },
-    {
-      provider: fontProviders.google(),
-      name: 'Inter',
-      cssVariable: '--font-body',
-      fallbacks: ['system-ui', 'sans-serif'],
-      weights: [400, 500, 600],
-    },
-    {
-      provider: fontProviders.google(),
-      name: 'JetBrains Mono',
-      cssVariable: '--font-mono',
-      fallbacks: ['monospace'],
-      weights: [400, 500],
-    },
-  ],
+	integrations: [mdx(), sitemap()],
 
-  vite: {
-    plugins: [tailwindcss()],
-  },
+	markdown: {
+		shikiConfig: {
+			theme: 'github-dark',
+		},
+	},
 
-  adapter: cloudflare(),
+	fonts: [
+		{
+			provider: fontProviders.google(),
+			name: 'Space Grotesk',
+			cssVariable: '--font-heading',
+			fallbacks: ['system-ui', 'sans-serif'],
+			weights: [400, 500, 600, 700],
+		},
+		{
+			provider: fontProviders.google(),
+			name: 'Inter',
+			cssVariable: '--font-body',
+			fallbacks: ['system-ui', 'sans-serif'],
+			weights: [400, 500, 600],
+		},
+		{
+			provider: fontProviders.google(),
+			name: 'JetBrains Mono',
+			cssVariable: '--font-mono',
+			fallbacks: ['monospace'],
+			weights: [400, 500],
+		},
+	],
+
+	vite: {
+		plugins: [tailwindcss()],
+	},
 });
