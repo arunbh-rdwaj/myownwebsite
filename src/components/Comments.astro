@@ -1,0 +1,641 @@
+---
+/**
+ * Comments component — dual-mode
+ *
+ * Props:
+ *   showSupabase  (default true)  — WordPress-style form + stored comments via Supabase
+ *   showGiscus    (default true)  — GitHub Discussions widget via giscus
+ *
+ * Set either to false in BlogPost.astro to hide that section.
+ *
+ * Supabase setup — run once in your Supabase SQL editor:
+ * ─────────────────────────────────────────────────────
+ * create table comments (
+ *   id          bigint generated always as identity primary key,
+ *   post_slug   text        not null,
+ *   author_name text        not null,
+ *   author_email text       not null,
+ *   website     text,
+ *   body        text        not null,
+ *   created_at  timestamptz not null default now()
+ * );
+ * -- Allow anyone to read and insert comments
+ * create policy "read all" on comments for select using (true);
+ * create policy "insert"   on comments for insert with check (true);
+ * alter table comments enable row level security;
+ * ─────────────────────────────────────────────────────
+ */
+
+interface Props {
+  showSupabase?: boolean;
+  showGiscus?: boolean;
+  /** Passed automatically from BlogPost — the post's slug used as the comment thread key */
+  postSlug?: string;
+}
+
+const {
+  showSupabase = true,
+  showGiscus   = true,
+  postSlug     = Astro.url.pathname,
+} = Astro.props;
+
+// Giscus config — read from env so you only change .env, not this file
+const giscusRepo       = import.meta.env.PUBLIC_GISCUS_REPO        ?? 'arunbh-rdwaj/myownwebsite';
+const giscusRepoId     = import.meta.env.PUBLIC_GISCUS_REPO_ID     ?? 'R_kgDOSbnafg';
+const giscusCategory   = import.meta.env.PUBLIC_GISCUS_CATEGORY    ?? 'Comments';
+const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID ?? 'DIC_kwDOSbnafs4C9F0B';
+
+// Supabase config — public keys only, safe to expose
+const supabaseUrl     = import.meta.env.PUBLIC_SUPABASE_URL      ?? '';
+const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
+---
+
+{showSupabase && (
+  <section class="comments-section" aria-label="Leave a comment" id="supabase-comments">
+    <h2 class="comments-title">Leave a Reply</h2>
+    <p class="comments-privacy">
+      Your email address will not be published. Required fields are marked <span class="required-star">*</span>
+    </p>
+
+    <!-- Existing comments list -->
+    <div class="comment-list" id="comment-list">
+      <p class="comments-loading" id="comments-loading">Loading comments…</p>
+    </div>
+
+    <!-- Submit form -->
+    <form class="comment-form" id="comment-form" novalidate>
+      <div class="form-group full-width">
+        <label for="comment-body">
+          Comment <span class="required-star">*</span>
+        </label>
+        <textarea
+          id="comment-body"
+          name="body"
+          rows="6"
+          placeholder="Write your comment here…"
+          required
+        ></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="comment-name">
+            Name <span class="required-star">*</span>
+          </label>
+          <input
+            type="text"
+            id="comment-name"
+            name="author_name"
+            placeholder="Your name"
+            required
+            autocomplete="name"
+          />
+        </div>
+        <div class="form-group">
+          <label for="comment-email">
+            Email <span class="required-star">*</span>
+          </label>
+          <input
+            type="email"
+            id="comment-email"
+            name="author_email"
+            placeholder="your@email.com"
+            required
+            autocomplete="email"
+          />
+        </div>
+        <div class="form-group">
+          <label for="comment-website">Website</label>
+          <input
+            type="url"
+            id="comment-website"
+            name="website"
+            placeholder="https://yoursite.com"
+            autocomplete="url"
+          />
+        </div>
+      </div>
+
+      <div class="form-check">
+        <input type="checkbox" id="save-info" name="save_info" />
+        <label for="save-info">
+          Save my name, email, and website in this browser for the next time I comment.
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="submit-btn">
+          <span class="btn-text">Post Comment</span>
+        </button>
+        <p class="form-status" id="form-status" aria-live="polite"></p>
+      </div>
+    </form>
+  </section>
+)}
+
+{showGiscus && (
+  <section
+    class:list={['giscus-section', { 'has-border': showSupabase }]}
+    aria-label="GitHub Discussions"
+    id="giscus-comments"
+  >
+    {!showSupabase && <h2 class="comments-title">Discussion</h2>}
+    <p class="comments-hint">
+      {showSupabase
+        ? 'Also join the conversation on GitHub →'
+        : 'Sign in with GitHub to join the conversation.'}
+    </p>
+    <div id="giscus-container">
+      <script
+        is:inline
+        src="https://giscus.app/client.js"
+        data-repo={giscusRepo}
+        data-repo-id={giscusRepoId}
+        data-category={giscusCategory}
+        data-category-id={giscusCategoryId}
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="preferred_color_scheme"
+        data-lang="en"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async
+      ></script>
+    </div>
+  </section>
+)}
+
+<style>
+  /* ── Shared ── */
+  .comments-section,
+  .giscus-section {
+    border-top: 1px solid var(--border);
+    padding-top: 3rem;
+    margin-top: 3rem;
+  }
+
+  .giscus-section.has-border {
+    border-top: 1px solid var(--border);
+    padding-top: 2rem;
+    margin-top: 2rem;
+  }
+
+  .comments-title {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+    font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+    letter-spacing: -0.02em;
+  }
+
+  .comments-privacy {
+    font-size: 0.82em;
+    color: var(--text-dim);
+    font-style: italic;
+    margin-bottom: 1.75rem;
+  }
+
+  .required-star { color: var(--accent); }
+
+  /* ── Existing comments ── */
+  .comment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .comments-loading {
+    font-size: 0.85em;
+    color: var(--text-dim);
+    margin: 0;
+  }
+
+  .comment-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .comment-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .comment-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75em;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+    text-transform: uppercase;
+  }
+
+  .comment-meta { display: flex; flex-direction: column; gap: 0.1rem; }
+
+  .comment-author {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: var(--text);
+    font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+  }
+
+  .comment-author a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .comment-author a:hover { text-decoration: underline; }
+
+  .comment-date {
+    font-size: 0.75em;
+    color: var(--text-dim);
+  }
+
+  .comment-body {
+    font-size: 0.9em;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* ── Form ── */
+  .comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+  }
+
+  .form-group.full-width { width: 100%; }
+
+  .form-group label {
+    font-size: 0.82em;
+    font-weight: 600;
+    color: var(--text);
+    font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.65em 0.9em;
+    font-size: 0.9em;
+    font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+    color: var(--text);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    resize: vertical;
+  }
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder { color: var(--text-dim); }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-dim);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .form-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .form-check input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    margin-top: 2px;
+    flex-shrink: 0;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  .form-check label {
+    font-size: 0.8em;
+    color: var(--text-dim);
+    cursor: pointer;
+    line-height: 1.5;
+  }
+
+  .form-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.65em 1.6em;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 600;
+    font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-accent);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .form-status {
+    font-size: 0.85em;
+    margin: 0;
+  }
+  .form-status.success { color: #16a34a; }
+  .form-status.error   { color: #dc2626; }
+
+  /* ── Giscus hint ── */
+  .comments-hint {
+    font-size: 0.85em;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 700px) {
+    .form-row { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 480px) {
+    .comments-section,
+    .giscus-section { padding-top: 2rem; margin-top: 2rem; }
+    .comment-item { padding: 1rem; }
+  }
+</style>
+
+<script define:vars={{ supabaseUrl, supabaseAnonKey, postSlug }}>
+  // ── Helpers ──────────────────────────────────────────────────────────────
+
+  /** Format ISO date string to "May 15, 2026" */
+  function formatDate(iso) {
+    return new Date(iso).toLocaleDateString('en-GB', {
+      day: 'numeric', month: 'long', year: 'numeric',
+    });
+  }
+
+  /** Get initials from a name */
+  function initials(name) {
+    return name
+      .split(' ')
+      .slice(0, 2)
+      .map((w) => w[0] ?? '')
+      .join('')
+      .toUpperCase();
+  }
+
+  /** Escape HTML to prevent XSS in comment bodies */
+  function escapeHtml(str) {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // ── Supabase fetch ────────────────────────────────────────────────────────
+
+  async function fetchComments() {
+    if (!supabaseUrl || !supabaseAnonKey) return [];
+    const url =
+      `${supabaseUrl}/rest/v1/comments` +
+      `?post_slug=eq.${encodeURIComponent(postSlug)}` +
+      `&order=created_at.asc` +
+      `&select=id,author_name,website,body,created_at`;
+
+    const res = await fetch(url, {
+      headers: {
+        apikey: supabaseAnonKey,
+        Authorization: `Bearer ${supabaseAnonKey}`,
+      },
+    });
+    if (!res.ok) return [];
+    return res.json();
+  }
+
+  async function postComment(payload) {
+    const res = await fetch(`${supabaseUrl}/rest/v1/comments`, {
+      method: 'POST',
+      headers: {
+        apikey: supabaseAnonKey,
+        Authorization: `Bearer ${supabaseAnonKey}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify(payload),
+    });
+    return res.ok;
+  }
+
+  // ── Render comments ───────────────────────────────────────────────────────
+
+  function renderComments(comments, container) {
+    container.innerHTML = '';
+    if (!comments.length) {
+      container.innerHTML =
+        '<p class="comments-loading">No comments yet. Be the first to leave one!</p>';
+      return;
+    }
+    comments.forEach((c) => {
+      const item = document.createElement('div');
+      item.className = 'comment-item';
+
+      const nameHtml = c.website
+        ? `<a href="${escapeHtml(c.website)}" target="_blank" rel="noopener noreferrer">${escapeHtml(c.author_name)}</a>`
+        : escapeHtml(c.author_name);
+
+      item.innerHTML = `
+        <div class="comment-header">
+          <div class="comment-avatar">${escapeHtml(initials(c.author_name))}</div>
+          <div class="comment-meta">
+            <span class="comment-author">${nameHtml}</span>
+            <span class="comment-date">${formatDate(c.created_at)}</span>
+          </div>
+        </div>
+        <p class="comment-body">${escapeHtml(c.body)}</p>
+      `;
+      container.appendChild(item);
+    });
+  }
+
+  // ── localStorage helpers ──────────────────────────────────────────────────
+
+  const STORAGE_KEY = 'comment_author_info';
+
+  function loadSavedInfo() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : null;
+    } catch { return null; }
+  }
+
+  function saveInfo(name, email, website) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ name, email, website })); }
+    catch { /* ignore */ }
+  }
+
+  function clearInfo() {
+    try { localStorage.removeItem(STORAGE_KEY); }
+    catch { /* ignore */ }
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+
+  const commentList = document.getElementById('comment-list');
+  const loadingEl   = document.getElementById('comments-loading');
+  const form        = document.getElementById('comment-form');
+  const statusEl    = document.getElementById('form-status');
+  const submitBtn   = document.getElementById('submit-btn');
+  const btnText     = submitBtn?.querySelector('.btn-text');
+  const saveCheckbox = document.getElementById('save-info');
+
+  // Pre-fill saved author info
+  if (form) {
+    const saved = loadSavedInfo();
+    if (saved) {
+      form.querySelector('#comment-name').value   = saved.name    ?? '';
+      form.querySelector('#comment-email').value  = saved.email   ?? '';
+      form.querySelector('#comment-website').value = saved.website ?? '';
+      if (saveCheckbox) saveCheckbox.checked = true;
+    }
+  }
+
+  // Load and render existing comments
+  if (commentList) {
+    fetchComments()
+      .then((comments) => renderComments(comments, commentList))
+      .catch(() => {
+        if (commentList) commentList.innerHTML =
+          '<p class="comments-loading">Could not load comments.</p>';
+      });
+  }
+
+  // Handle form submission
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form || !statusEl || !submitBtn) return;
+
+    const body    = form.querySelector('#comment-body').value.trim();
+    const name    = form.querySelector('#comment-name').value.trim();
+    const email   = form.querySelector('#comment-email').value.trim();
+    const website = form.querySelector('#comment-website').value.trim();
+    const doSave  = saveCheckbox?.checked ?? false;
+
+    if (!body || !name || !email) {
+      statusEl.textContent = 'Please fill in all required fields.';
+      statusEl.className = 'form-status error';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    if (btnText) btnText.textContent = 'Posting…';
+    statusEl.textContent = '';
+    statusEl.className = 'form-status';
+
+    const ok = await postComment({
+      post_slug:    postSlug,
+      author_name:  name,
+      author_email: email,
+      website:      website || null,
+      body,
+    });
+
+    if (ok) {
+      statusEl.textContent = '✓ Comment posted!';
+      statusEl.className = 'form-status success';
+      form.reset();
+      if (doSave) saveInfo(name, email, website);
+      else clearInfo();
+      // Re-check saved state after reset
+      if (saveCheckbox) saveCheckbox.checked = doSave;
+      // Re-fetch so the new comment appears immediately
+      fetchComments().then((comments) => renderComments(comments, commentList));
+    } else {
+      statusEl.textContent = 'Something went wrong. Please try again.';
+      statusEl.className = 'form-status error';
+    }
+
+    submitBtn.disabled = false;
+    if (btnText) btnText.textContent = 'Post Comment';
+  });
+
+  // ── Giscus theme sync ─────────────────────────────────────────────────────
+
+  function getGiscusTheme() {
+    const t = document.documentElement.getAttribute('data-theme')
+      ?? localStorage.getItem('theme')
+      ?? 'light';
+    return t === 'dark' ? 'dark' : 'light';
+  }
+
+  function sendGiscusTheme(theme) {
+    const iframe = document.querySelector('iframe.giscus-frame');
+    if (!iframe?.contentWindow) return;
+    iframe.contentWindow.postMessage(
+      { giscus: { setConfig: { theme } } },
+      'https://giscus.app'
+    );
+  }
+
+  window.addEventListener('message', (event) => {
+    if (event.origin !== 'https://giscus.app') return;
+    if (event.data?.giscus?.discussion !== undefined) {
+      sendGiscusTheme(getGiscusTheme());
+    }
+  });
+
+  new MutationObserver(() => sendGiscusTheme(getGiscusTheme())).observe(
+    document.documentElement,
+    { attributes: true, attributeFilter: ['data-theme'] }
+  );
+</script>

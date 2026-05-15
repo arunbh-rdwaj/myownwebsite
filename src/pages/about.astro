@@ -13,6 +13,7 @@ import heroAbout from '../assets/edit.png';
 		<BaseHead
 			title={`About — ${SITE_TITLE}`}
 			description="Software Engineer, builder, AI enthusiast, and home cook sharing tech, ideas, and recipes."
+			type="website"
 		/>
 	</head>
 	<body>
@@ -83,6 +84,76 @@ import heroAbout from '../assets/edit.png';
 						<p>Recipes and food content over at <a href="https://cookwitharun.com" target="_blank" rel="noopener noreferrer">CookWithArun.com</a>.</p>
 					</div>
 				</div>
+			</section>
+			<section class="contact-section">
+				<span class="section-label">Get In Touch</span>
+				<h2 class="section-title">Contact Me</h2>
+				<p class="contact-intro">
+					Have a question, project idea, or just want to say hi? Drop me a message and I'll get back
+					to you as soon as I can.
+				</p>
+
+				<form
+					action="https://formspree.io/f/xwvydwbn"
+					method="POST"
+					class="contact-form"
+					id="contact-form"
+				>
+					<div class="form-row">
+						<div class="form-group">
+							<label for="name">Name</label>
+							<input
+								type="text"
+								id="name"
+								name="name"
+								placeholder="Your name"
+								required
+								autocomplete="name"
+							/>
+						</div>
+						<div class="form-group">
+							<label for="email">Email</label>
+							<input
+								type="email"
+								id="email"
+								name="email"
+								placeholder="your@email.com"
+								required
+								autocomplete="email"
+							/>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="subject">Subject</label>
+						<input
+							type="text"
+							id="subject"
+							name="subject"
+							placeholder="What's this about?"
+							required
+						/>
+					</div>
+
+					<div class="form-group">
+						<label for="message">Message</label>
+						<textarea
+							id="message"
+							name="message"
+							rows="5"
+							placeholder="Tell me what's on your mind..."
+							required
+						></textarea>
+					</div>
+
+					<div class="form-footer">
+						<button type="submit" class="btn btn-primary submit-btn">
+							<span class="btn-text">Send Message</span>
+							<span class="btn-icon" aria-hidden="true">→</span>
+						</button>
+						<p class="form-status" id="form-status" aria-live="polite"></p>
+					</div>
+				</form>
 			</section>
 		</main>
 
@@ -275,4 +346,150 @@ import heroAbout from '../assets/edit.png';
 		.topics-grid { grid-template-columns: 1fr; }
 		.topics-section { padding-top: 2rem; }
 	}
+
+	/* ── Contact Section ── */
+	.contact-section {
+		border-top: 1px solid var(--border);
+		padding-top: 3rem;
+		margin-top: 3rem;
+	}
+
+	.contact-intro {
+		color: var(--text-muted);
+		font-size: 0.95em;
+		line-height: 1.7;
+		margin-bottom: 2rem;
+		max-width: 560px;
+	}
+
+	.contact-form {
+		background: var(--bg-card);
+		border: 1px solid var(--border);
+		border-radius: 16px;
+		padding: 2rem;
+		max-width: 680px;
+	}
+
+	.form-row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+	}
+
+	.form-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+		margin-bottom: 1rem;
+	}
+
+	.form-group label {
+		font-size: 0.82em;
+		font-weight: 600;
+		color: var(--text);
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+		letter-spacing: 0.01em;
+	}
+
+	.form-group input,
+	.form-group textarea {
+		width: 100%;
+		background: var(--bg);
+		border: 1px solid var(--border);
+		border-radius: 8px;
+		padding: 0.65em 0.9em;
+		font-size: 0.9em;
+		font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+		color: var(--text);
+		transition: border-color 0.2s, box-shadow 0.2s;
+		outline: none;
+		resize: vertical;
+	}
+
+	.form-group input::placeholder,
+	.form-group textarea::placeholder {
+		color: var(--text-dim);
+	}
+
+	.form-group input:focus,
+	.form-group textarea:focus {
+		border-color: var(--accent);
+		box-shadow: 0 0 0 3px var(--accent-dim);
+	}
+
+	.form-footer {
+		display: flex;
+		align-items: center;
+		gap: 1.25rem;
+		flex-wrap: wrap;
+		margin-top: 0.5rem;
+	}
+
+	.submit-btn {
+		gap: 0.5em;
+	}
+
+	.submit-btn:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
+		transform: none;
+	}
+
+	.form-status {
+		font-size: 0.85em;
+		margin: 0;
+	}
+
+	.form-status.success { color: #16a34a; }
+	.form-status.error   { color: #dc2626; }
+
+	@media (max-width: 600px) {
+		.form-row { grid-template-columns: 1fr; }
+		.contact-form { padding: 1.25rem; }
+		.contact-section { padding-top: 2rem; margin-top: 2rem; }
+	}
 </style>
+
+<script>
+	const form = document.getElementById('contact-form') as HTMLFormElement | null;
+	const status = document.getElementById('form-status');
+	const submitBtn = form?.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+	const btnText = submitBtn?.querySelector('.btn-text');
+
+	form?.addEventListener('submit', async (e) => {
+		e.preventDefault();
+		if (!form || !status || !submitBtn) return;
+
+		submitBtn.disabled = true;
+		if (btnText) btnText.textContent = 'Sending…';
+		status.textContent = '';
+		status.className = 'form-status';
+
+		try {
+			const res = await fetch(form.action, {
+				method: 'POST',
+				body: new FormData(form),
+				headers: { Accept: 'application/json' },
+			});
+
+			if (res.ok) {
+				status.textContent = '✓ Message sent! I\'ll get back to you soon.';
+				status.className = 'form-status success';
+				form.reset();
+			} else {
+				const data = await res.json().catch(() => ({}));
+				const msg = (data as { errors?: { message: string }[] }).errors
+					?.map((err) => err.message)
+					.join(', ');
+				status.textContent = msg ?? 'Something went wrong. Please try again.';
+				status.className = 'form-status error';
+			}
+		} catch {
+			status.textContent = 'Network error. Please check your connection and try again.';
+			status.className = 'form-status error';
+		} finally {
+			submitBtn.disabled = false;
+			if (btnText) btnText.textContent = 'Send Message';
+		}
+	});
+</script>
