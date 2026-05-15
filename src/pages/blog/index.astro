@@ -74,7 +74,13 @@ const allCategories = ['All', ...top10Tags];
 					>
 						{post.data.heroImage && (
 							<div class="post-row-image">
-								<Image src={post.data.heroImage} alt={post.data.title} width={160} height={100} />
+								<Image
+									src={post.data.heroImage}
+									alt={post.data.title}
+									width={720}
+									height={450}
+									quality={85}
+								/>
 							</div>
 						)}
 						<div class="post-row-body">

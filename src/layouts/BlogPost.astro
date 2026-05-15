@@ -436,6 +436,40 @@ const { title, description, pubDate, updatedDate, heroImage, heroImageAlt, tags 
 		margin: 1.5em 0;
 	}
 
+	/* ── Tables ── */
+	.prose :global(table) {
+		display: block;
+		width: 100%;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		border-collapse: collapse;
+		margin: 1.5em 0;
+		font-size: 0.9em;
+	}
+
+	.prose :global(th),
+	.prose :global(td) {
+		padding: 0.6em 1em;
+		border: 1px solid var(--border);
+		text-align: left;
+		white-space: nowrap;
+	}
+
+	.prose :global(th) {
+		background: var(--bg-secondary);
+		font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+		font-size: 0.85em;
+		font-weight: 600;
+	}
+
+	@media (max-width: 640px) {
+		.prose :global(th),
+		.prose :global(td) {
+			padding: 0.5em 0.75em;
+			font-size: 0.85em;
+		}
+	}
+
 	/* ── TOC Sidebar ── */
 	.toc-sidebar {
 		position: sticky;
