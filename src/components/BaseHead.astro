@@ -14,8 +14,6 @@ interface Props {
 	imageAlt?: string;
 	/** "website" for regular pages, "article" for blog posts */
 	type?: 'website' | 'article';
-	/** Post slug — used to build the /og/[slug].png URL for articles */
-	ogSlug?: string;
 	/** Article publish date (ISO string) — used when type="article" */
 	pubDate?: Date;
 	/** Article author name */
@@ -30,7 +28,6 @@ const {
 	image    = FallbackImage,
 	imageAlt = title,
 	type     = 'website',
-	ogSlug,
 	pubDate,
 	author   = 'Arun Bhardwaj',
 	tags     = [],
@@ -38,34 +35,24 @@ const {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
+// Build an absolute OG image URL.
+// Astro's image pipeline outputs paths like /_astro/foo.abc123.jpg
+// We must resolve against Astro.site (not Astro.url) to get a stable absolute URL.
 const siteBase = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const ogImageURL = image.src.startsWith('http')
+	? image.src
+	: `${siteBase}${image.src}`;
 
-// For blog articles use the generated OG image at /og/[slug].png
-// For other pages use the hero image (or fallback) directly
-let ogImageURL: string;
-let ogImageWidth: number;
-let ogImageHeight: number;
-let ogImageMime: string;
-
-if (type === 'article' && ogSlug) {
-	ogImageURL    = `${siteBase}/og/${ogSlug}.png`;
-	ogImageWidth  = 1200;
-	ogImageHeight = 630;
-	ogImageMime   = 'image/png';
-} else {
-	ogImageURL = image.src.startsWith('http')
-		? image.src
-		: `${siteBase}${image.src}`;
-	const ext = image.src.split('.').pop()?.toLowerCase() ?? 'jpg';
-	const mimeMap: Record<string, string> = {
-		jpg: 'image/jpeg', jpeg: 'image/jpeg',
-		png: 'image/png',  webp: 'image/webp',
-		gif: 'image/gif',  avif: 'image/avif',
-	};
-	ogImageMime   = mimeMap[ext] ?? 'image/jpeg';
-	ogImageWidth  = image.width  ?? 1200;
-	ogImageHeight = image.height ?? 630;
-}
+// Derive MIME type from file extension
+const ext = image.src.split('.').pop()?.toLowerCase() ?? 'jpg';
+const mimeMap: Record<string, string> = {
+	jpg: 'image/jpeg', jpeg: 'image/jpeg',
+	png: 'image/png', webp: 'image/webp',
+	gif: 'image/gif', avif: 'image/avif',
+};
+const ogImageMime   = mimeMap[ext] ?? 'image/jpeg';
+const ogImageWidth  = image.width  ?? 1200;
+const ogImageHeight = image.height ?? 630;
 ---
 
 <!-- Global Metadata -->

@@ -7,9 +7,9 @@ import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 
-type Props = CollectionEntry<'blog'>['data'] & { slug: string };
+type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage, heroImageAlt, tags, slug } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, heroImageAlt, tags } = Astro.props;
 ---
 
 <html lang="en">
@@ -20,7 +20,6 @@ const { title, description, pubDate, updatedDate, heroImage, heroImageAlt, tags,
 			image={heroImage}
 			imageAlt={heroImageAlt ?? title}
 			type="article"
-			ogSlug={slug}
 			pubDate={pubDate}
 			author="Arun Bhardwaj"
 			tags={tags}

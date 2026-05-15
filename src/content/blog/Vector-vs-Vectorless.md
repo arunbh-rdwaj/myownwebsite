@@ -5,6 +5,7 @@ tags: ["Vector-database", "RAG", "LLM", "AI", "Chunking", "Pinecone", "Claude", 
 heroImage: "../../assets/vector-vs-vectorless.jpeg"
 heroImageAlt: Vector databases vs long context LLMs — do you still need to chunk?
 description: "With 1 million token context windows now standard, do you still need to chunk your PDFs and build a RAG pipeline? Here's an honest breakdown of when vector databases still win — and when you can skip them entirely."
+author: "Arun bhardwaj"
 ---
 
 If you've built anything with AI in the last couple of years, you've probably gone through the same ritual: split your PDF into chunks, embed each one, shove them into a vector database, and hope the right chunk gets retrieved when a user asks a question.

@@ -1,7 +1,7 @@
 ---
 title: "Vercel Security Breach — What Happened and What You Should Do"
 pubDate: 2026-04-20
-author: "Your Name"
+author: "Arun bhardwaj"
 heroImage: '../../assets/vercel-breach.png'
 description: "Vercel confirmed a breach involving customer data through a third-party AI tool. Here is the breakdown and recovery steps."
 category: "Artificial Intelligence"
