@@ -6,6 +6,7 @@ tags: ["Amazon", "AI", "Alexa", "Rufus", "Shopping", "Agentic AI"]
 heroImage: "../../assets/Alexa_rufus.jpeg"
 heroImageAlt: Alexa replacing Rufus
 author: "Arun bhardwaj"
+readingTime: 6
 ---
  
 Amazon has officially retired its **Rufus** chatbot and pivoted its entire AI shopping strategy around a new agentic assistant called **Alexa for Shopping**, launched on May 13, 2026.

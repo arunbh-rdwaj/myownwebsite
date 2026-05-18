@@ -7,6 +7,7 @@ heroImage: "../../assets/android-ai-os-cover.png"
 heroImageAlt: Android Is Becoming an AI Operating System
 tags: ["Google","AI", "Android",  "Gemini", "Tech"]
 author: "Arun bhardwaj"
+readingTime: 7
 ---
 
 

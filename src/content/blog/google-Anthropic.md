@@ -6,6 +6,7 @@ description: "Google's parent company Alphabet has committed up to $40 billion i
 heroImage: "../../assets/alphabet-anthropic.jpeg"
 heroImageAlt: Alphabet invests $40 billion in Anthropic
 author: "Arun bhardwaj"
+readingTime: 6
 ---
 
 In one of the largest private AI investments ever made, Google parent **Alphabet** announced on April 24, 2026 that it plans to invest **up to $40 billion** in Anthropic — the AI safety company behind Claude. This deal reshapes the AI landscape and puts Anthropic in a league of its own among private tech companies.

@@ -6,6 +6,7 @@ heroImage: "../../assets/Cherryblossom.png"
 heroImageAlt: How I make AI videos
 description: "My exact workflow for making cinematic AI videos with Veo3 inside Google Flow — from building prompts in Claude or ChatGPT to animating images into stunning 8-second clips."
 author: "Arun bhardwaj"
+readingTime: 5
 ---
 
 I've been making AI videos for a while now, and honestly — Veo3 changed everything. The quality is cinematic, the image-to-video is insanely consistent, and once you nail the workflow, it's almost addictive. Here's my exact process, start to finish.

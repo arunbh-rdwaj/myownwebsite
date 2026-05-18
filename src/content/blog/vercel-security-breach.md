@@ -6,6 +6,7 @@ heroImage: '../../assets/vercel-breach.png'
 description: "Vercel confirmed a breach involving customer data through a third-party AI tool. Here is the breakdown and recovery steps."
 category: "Artificial Intelligence"
 tags: ["vercel", "data-breach" , "AI","Tech"]
+readingTime: 5
 ---
 
 Cloud hosting giant Vercel confirmed this weekend that hackers breached its internal systems and accessed customer data — through a compromised third-party AI tool. Here's everything you need to know and the steps you should take right now.
