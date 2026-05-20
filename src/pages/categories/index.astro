@@ -27,6 +27,14 @@ const tags = [...tagMap.entries()]
 <!doctype html>
 <html lang="en">
 	<head>
+		<script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-0GE932R7SD"></script>
+		<script is:inline>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+
+			gtag('config', 'G-0GE932R7SD');
+		</script>
 		<BaseHead title={`Categories — ${SITE_TITLE}`} description="Browse blog posts by topic." />
 	</head>
 	<body>

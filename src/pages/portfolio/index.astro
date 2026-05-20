@@ -9,6 +9,14 @@ import { projects } from '../../data/projects';
 <!doctype html>
 <html lang="en">
 	<head>
+		<script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-0GE932R7SD"></script>
+		<script is:inline>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+
+			gtag('config', 'G-0GE932R7SD');
+		</script>
 		<BaseHead
 			title={`Portfolio — ${SITE_TITLE}`}
 			description="A collection of my projects, resume, and skills that define my journey as a software engineer."

@@ -10,6 +10,14 @@ import heroAbout from '../assets/edit.png';
 <!doctype html>
 <html lang="en">
 	<head>
+		<script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-0GE932R7SD"></script>
+		<script is:inline>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+
+			gtag('config', 'G-0GE932R7SD');
+		</script>
 		<BaseHead
 			title={`About — ${SITE_TITLE}`}
 			description="Software Engineer, builder, AI enthusiast, and home cook sharing tech, ideas, and recipes."
@@ -160,7 +168,6 @@ import heroAbout from '../assets/edit.png';
 		<Footer />
 	</body>
 </html>
-
 <style>
 	main {
 		width: 100%;
