@@ -165,4 +165,3 @@ The cameras are rolling. The question is: who controls what happens after the fo
 
 *Sources: Business Standard, Scroll.in, MIT Technology Review, Free Press Journal, Let's Data Science (May 2026)*
 
-*Tags: #AI #Robotics #FutureOfWork #India #GigEconomy #Automation #DataCollection #HumanoidRobots #JobDisplacement #PhysicalAI #LabourRights #TechEthics*
