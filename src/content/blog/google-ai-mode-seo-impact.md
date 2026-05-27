@@ -5,7 +5,7 @@ pubDate: 2026-05-18
 author: "Arun Bhardwaj"
 tags: ["google ai mode", "seo", "ai search", "google search", "search traffic"]
 heroImage: "../../assets/google-ai-mode.png"
-heroImageAlt: "Illustration showing Google Search evolving from a traditional list of links into an AI-powered answer interface, representing the shift to Google AI Mode."
+heroImageAlt: Illustration showing Google Search evolving from a traditional list of links into an AI-powered answer interface, representing the shift to Google AI Mode.
 readingTime: 8
 ---
 
