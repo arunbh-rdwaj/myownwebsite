@@ -4,8 +4,8 @@ description: "NVIDIA's brand-new RTX Spark superchip, unveiled at Computex 2026,
 pubDate: 2026-06-01
 author: "Arun Bhardwaj"
 tags: ["NVIDIA", "AI", "RTX Spark", "Computex 2026", "AI PC", "Hardware"]
-heroImage: "../../assets/nvidia-rtx-spark-hero-full-viewport-tablet.jpg"
-heroImageAlt: NVIDIA RTX Spark promotional image (source: NVIDIA)
+heroImage: "../../assets/nvidia-rtx-spark.jpg"
+heroImageAlt: "NVIDIA RTX Spark promotional image (source: NVIDIA)"
 readingTime: 4
 ---
 
